@@ -1,6 +1,7 @@
 ﻿using Prism.Ioc;
 using PasswordManager.Views;
 using System.Windows;
+using PasswordManager.Services;
 
 namespace PasswordManager
 {
@@ -16,7 +17,7 @@ namespace PasswordManager
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.Register<IGeneratorService, GeneratorService>();
         }
     }
 }
