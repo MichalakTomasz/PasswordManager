@@ -2,6 +2,7 @@
 using PasswordManager.Services;
 using Prism.Commands;
 using Prism.Mvvm;
+using System.Windows;
 
 namespace PasswordManager.ViewModels
 {
@@ -22,7 +23,14 @@ namespace PasswordManager.ViewModels
             set { SetProperty(ref _keyValue, value); }
         }
 
-        private int _KeyLength;
+        private string _keyName;
+        public string KeyName
+        {
+            get { return _keyName; }
+            set { SetProperty(ref _keyName, value); }
+        }
+
+        private int _KeyLength = 10;
         public int KeyLength
         {
             get { return _KeyLength; }
@@ -77,13 +85,24 @@ namespace PasswordManager.ViewModels
                 return keyType;
             }
         } 
+
         private DelegateCommand _generateKeyCommand;
         public DelegateCommand GenerateKeyCommand =>
-            _generateKeyCommand ?? (_generateKeyCommand = new DelegateCommand(ExecuteGenerateKeyCommad));
+            _generateKeyCommand ?? (_generateKeyCommand = 
+            new DelegateCommand(ExecuteGenerateKeyCommad));
 
         void ExecuteGenerateKeyCommad()
         {
             KeyValue = _generatorService.GenerateKey(KeyLength, KeyType);
+        }
+
+        private DelegateCommand _copyCommand;
+        public DelegateCommand CopyCommand =>
+            _copyCommand ?? (_copyCommand = new DelegateCommand(ExecuteCopyCommand));
+
+        void ExecuteCopyCommand()
+        {
+            Clipboard.SetText(KeyValue); 
         }
     }
 }
