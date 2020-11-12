@@ -1,7 +1,9 @@
-﻿using PasswordManager.Models;
+﻿using PasswordManager.EntityModels;
+using PasswordManager.Models;
 using PasswordManager.Services;
 using Prism.Commands;
 using Prism.Mvvm;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace PasswordManager.ViewModels
@@ -9,11 +11,19 @@ namespace PasswordManager.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         private readonly IGeneratorService _generatorService;
+        private readonly IDataService _dataService;
 
-
-        public MainWindowViewModel(IGeneratorService generatorService)
+        public MainWindowViewModel(IGeneratorService generatorService, IDataService dataService)
         {
             _generatorService = generatorService;
+            _dataService = dataService;
+        }
+
+        private IEnumerable<PasswordSet> _passwords;
+        public IEnumerable<PasswordSet> Passwords
+        {
+            get { return _passwords; }
+            set { SetProperty(ref _passwords, value); }
         }
 
         private string _keyValue;

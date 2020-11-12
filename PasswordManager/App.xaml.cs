@@ -20,10 +20,10 @@ namespace PasswordManager
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IGeneratorService, GeneratorService>();
+            containerRegistry.Register<IDataService, DataService>();
+
             var dbContextOptions = GetDbcontextOptions();
             containerRegistry.RegisterInstance(new PasswordDbContext(dbContextOptions));
-
-            
         }
 
         private DbContextOptions<PasswordDbContext> GetDbcontextOptions()

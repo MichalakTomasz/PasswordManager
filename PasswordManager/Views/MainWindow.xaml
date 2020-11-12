@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        Title="Password Manager" Height="350" Width="692" >
+        Title="Password Manager" Height="600" Width="800" >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Ribbon Grid.Row="0">
@@ -25,10 +26,51 @@
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>
+        <GroupBox Grid.Row="1" Header="Generator" Height="190">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" MinWidth="200"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width=".8*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                    <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding KeyValue}" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Hasło"/>
+                    <TextBox Grid.Row="0" Grid.Column="2" Width="30" Text="{Binding KeyLength}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Długość" />
+                <Button Grid.Row="0" Grid.Column="3" Content="Generuj" Command="{Binding GenerateKeyCommand}"/>
+                <Button Grid.Row="1" Grid.Column="3" Content="Kopiuj" Command="{Binding CopyCommand}"/>
+                <StackPanel Grid.Row="2" Grid.Column="2"  
+                            Grid.RowSpan="2" Orientation="Vertical" 
+                            HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <CheckBox Content="Duże litery" IsChecked="{Binding CapitalLetters}"/>
+                    <CheckBox Content="Małe litery" IsChecked="{Binding SmallLetters}"/>
+                    <CheckBox Content="Cyfry" IsChecked="{Binding Digits}"/>
+                    <CheckBox Content="Znaki" IsChecked="{Binding Chars}"/>
+                </StackPanel>
+                <TextBox Grid.Row="2" Grid.Column="0" Width="auto" />
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Login"/>
+                <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding KeyName}" />
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="Nazwa"/>
+                <Button Grid.Row="2" Grid.Column="3" Content="Zapisz"/>
+                <TextBox Grid.Row="2"/>
+            </Grid>
+        </GroupBox>
         <DataGrid 
-            Grid.Row="1"
+            Grid.Row="2"
             ItemsSource="{Binding Passwords}">
-            
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nazwa"/>
+                <DataGridTextColumn Header="Login"/>
+                <DataGridTextColumn Header="Hasło"/>
+                <DataGridTextColumn Header="Komentarz"/>
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </RibbonWindow>
