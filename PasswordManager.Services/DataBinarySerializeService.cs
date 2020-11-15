@@ -4,31 +4,31 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace PasswordManager.Services
 {
-    public class DataBinaryConverterService : IDataBinaryConverterService
+    public class DataBinarySerializeService : IDataBinarySerializeService
     {
         private readonly ILogService _logService;
         private readonly IAppStateService _appStateService;
 
-        public DataBinaryConverterService(ILogService logService, IAppStateService appStateService)
+        public DataBinarySerializeService(ILogService logService, IAppStateService appStateService)
         {
             _logService = logService;
             _appStateService = appStateService;
         }
 
-        public byte[] Serialize<TData>(TData password)
+        public byte[] Serialize<TData>(TData sourceData)
         {
             try
             {
                 var binaryFormatter = new BinaryFormatter();
                 using (var memoryStream = new MemoryStream())
                 {
-                    binaryFormatter.Serialize(memoryStream, password);
+                    binaryFormatter.Serialize(memoryStream, sourceData);
                     return memoryStream.ToArray();
                 }
             }
             catch (Exception e)
             {
-                _logService.LogError($"{nameof(DataBinaryConverterService)} error: {e.Message}");
+                _logService.LogError($"{nameof(DataBinarySerializeService)} error: {e.Message}");
                 if (_appStateService.IsInDebugMode)
                     throw;
                 else
@@ -48,7 +48,7 @@ namespace PasswordManager.Services
             }
             catch (Exception e)
             {
-                _logService.LogError($"{nameof(DataBinaryConverterService)} error: {e.Message}");
+                _logService.LogError($"{nameof(DataBinarySerializeService)} error: {e.Message}");
                 if (_appStateService.IsInDebugMode)
                     throw;
                 else

@@ -1,8 +1,8 @@
 ﻿namespace PasswordManager.Services
 {
-    public interface IDataBinaryConverterService
+    public interface IDataBinarySerializeService
     {
         TData Deserialize<TData>(byte[] buffer);
-        byte[] Serialize<TData>(TData password);
+        byte[] Serialize<TData>(TData sourceData);
     }
 }

@@ -23,7 +23,7 @@ namespace PasswordManager
             containerRegistry.Register<IDataService, DataService>();
             containerRegistry.Register<ILogService, LogService>();
             containerRegistry.Register<IAppStateService, AppStateService>();
-            containerRegistry.Register<IDataBinaryConverterService, DataBinaryConverterService>();
+            containerRegistry.Register<IDataBinarySerializeService, DataBinarySerializeService>();
             containerRegistry.Register<IAesCryptographicService, AesCryptographicService>();
 
             var dbContextOptions = GetDbcontextOptions();
