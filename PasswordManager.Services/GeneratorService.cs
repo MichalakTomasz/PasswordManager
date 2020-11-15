@@ -57,6 +57,7 @@ namespace PasswordManager.Services
             var types = keyTypes.GetType();
             var properties = types.GetProperties();
             var resultList = new List<string>();
+
             foreach(var properyty in properties)
             {
                 var value = (bool)properyty.GetValue(keyTypes);

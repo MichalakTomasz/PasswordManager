@@ -33,6 +33,20 @@ namespace PasswordManager.ViewModels
             set { SetProperty(ref _keyValue, value); }
         }
 
+        private string _login;
+        public string Login
+        {
+            get { return _login; }
+            set { SetProperty(ref _login, value); }
+        }
+
+        private string _comment;
+        public string Comment
+        {
+            get { return _comment; }
+            set { SetProperty(ref _comment, value); }
+        }
+
         private string _keyName;
         public string KeyName
         {
@@ -99,7 +113,14 @@ namespace PasswordManager.ViewModels
         private DelegateCommand _generateKeyCommand;
         public DelegateCommand GenerateKeyCommand =>
             _generateKeyCommand ?? (_generateKeyCommand = 
-            new DelegateCommand(ExecuteGenerateKeyCommad));
+            new DelegateCommand(ExecuteGenerateKeyCommad, CanGenerateCommand)
+            .ObservesProperty(() => Digits)
+            .ObservesProperty(() => CapitalLetters)
+            .ObservesProperty(() => SmallLetters)
+            .ObservesProperty(() => Chars));
+
+        private bool CanGenerateCommand()
+            => Digits || CapitalLetters || SmallLetters || Chars;
 
         void ExecuteGenerateKeyCommad()
         {
@@ -114,5 +135,22 @@ namespace PasswordManager.ViewModels
         {
             Clipboard.SetText(KeyValue); 
         }
+
+        private DelegateCommand _savePasswordCommand;
+        public DelegateCommand SavePasswordCommand =>
+            _savePasswordCommand ?? (_savePasswordCommand = 
+            new DelegateCommand(ExecuteSavePasswordCommand, CanExecutePasswordCommand)
+            .ObservesProperty(() => KeyName)
+            .ObservesProperty(() => KeyValue));
+
+        void ExecuteSavePasswordCommand()
+        {
+            var passwordSet = new PasswordSet();
+            _dataService.AddPassword(passwordSet);
+        }
+
+        bool CanExecutePasswordCommand()
+            => !string.IsNullOrWhiteSpace(KeyValue) &&
+            !string.IsNullOrWhiteSpace(KeyName);
     }
 }

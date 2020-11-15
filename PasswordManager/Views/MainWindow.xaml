@@ -40,7 +40,7 @@
                     <ColumnDefinition Width=".8*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                    <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding KeyValue}" />
+                    <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Hasło"/>
                     <TextBox Grid.Row="0" Grid.Column="2" Width="30" Text="{Binding KeyLength}"/>
                     <TextBlock Grid.Row="1" Grid.Column="2" Text="Długość" />
@@ -56,10 +56,10 @@
                 </StackPanel>
                 <TextBox Grid.Row="2" Grid.Column="0" Width="auto" />
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Login"/>
-                <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding KeyName}" />
+                <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding KeyName, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="Nazwa"/>
-                <Button Grid.Row="2" Grid.Column="3" Content="Zapisz"/>
-                <TextBox Grid.Row="2"/>
+                <Button Grid.Row="2" Grid.Column="3" Content="Zapisz" Command="{Binding SavePasswordCommand}"/>
+                <TextBox Grid.Row="2" Text="{Binding Login}"/>
             </Grid>
         </GroupBox>
         <DataGrid 

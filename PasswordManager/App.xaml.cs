@@ -21,6 +21,10 @@ namespace PasswordManager
         {
             containerRegistry.Register<IGeneratorService, GeneratorService>();
             containerRegistry.Register<IDataService, DataService>();
+            containerRegistry.Register<ILogService, LogService>();
+            containerRegistry.Register<IAppStateService, AppStateService>();
+            containerRegistry.Register<IDataBinaryConverterService, DataBinaryConverterService>();
+            containerRegistry.Register<IAesCryptographicService, AesCryptographicService>();
 
             var dbContextOptions = GetDbcontextOptions();
             containerRegistry.RegisterInstance(new PasswordDbContext(dbContextOptions));

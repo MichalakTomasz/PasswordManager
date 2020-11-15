@@ -6,5 +6,6 @@ namespace PasswordManager.Services
     public interface IDataService
     {
         IEnumerable<PasswordSet> GetPasswords();
+        bool AddPassword(PasswordSet passwordSet);
     }
 }
