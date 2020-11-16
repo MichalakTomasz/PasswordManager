@@ -23,7 +23,7 @@ namespace PasswordManager.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(passwordSet?.Password) || 
+                if (string.IsNullOrWhiteSpace(passwordSet?.EncryptedPassword) || 
                     string.IsNullOrWhiteSpace(passwordSet?.Username) || 
                     string.IsNullOrWhiteSpace(passwordSet.Name))
                     throw new ArgumentNullException();

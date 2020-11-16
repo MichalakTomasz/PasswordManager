@@ -4,6 +4,7 @@ using System.Windows;
 using PasswordManager.Services;
 using Microsoft.EntityFrameworkCore;
 using PasswordManager.Context;
+using System.Configuration;
 
 namespace PasswordManager
 {
@@ -27,20 +28,21 @@ namespace PasswordManager
             containerRegistry.Register<IAesCryptographicService, AesCryptographicService>();
 
             var dbContextOptions = GetDbcontextOptions();
-            containerRegistry.RegisterInstance(new PasswordDbContext(dbContextOptions));
+            //containerRegistry.RegisterInstance(new PasswordDbContext(dbContextOptions));
         }
 
         private DbContextOptions<PasswordDbContext> GetDbcontextOptions()
         {
-            var connectionString = (@"Data Source=..\PasswordDbSqlite.db");
+            var dbPath = @"..\PasswordDbSqlite.db";
+            var connectionString = InjectPathToConnectionString(dbPath);
             var dbContextBuilder = new DbContextOptionsBuilder<PasswordDbContext>();
             dbContextBuilder.UseSqlite(connectionString);
             dbContextBuilder.EnableSensitiveDataLogging(true);
             return dbContextBuilder.Options;
         }
 
-        //private string InjectPathToConnectionString(string path)
-        //    => ConfigurationManager.ConnectionStrings["DbFakturaSqlite"]
-        //    .ConnectionString.Replace("%path%", path);
+        private string InjectPathToConnectionString(string path)
+            => ConfigurationManager.ConnectionStrings["sqlite"]
+            .ConnectionString.Replace("%path%", path);
     }
 }

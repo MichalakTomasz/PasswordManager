@@ -1,8 +1,5 @@
 ﻿using Moq;
 using PasswordManager.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace PasswordManager.Test
