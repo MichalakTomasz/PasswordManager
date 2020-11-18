@@ -11,8 +11,8 @@ namespace PasswordManager.Services
         private readonly IAppStateService _appStateService;
         private readonly ILogService _logService;
 
-        public string LoggedUser { get; set; }
-        public bool IsLogged { get; set; }
+        public string LoggedUser { get; private set; }
+        public bool IsLogged { get; private set; }
         public AccountService(PasswordDbContext context, IAppStateService appStateService, ILogService logService)
         {
             _context = context;

@@ -4,7 +4,8 @@ namespace PasswordManager.Services
 {
     public interface IAccountService
     {
-        string LoggedUser { get; set; }
+        string LoggedUser { get; }
+        bool IsLogged { get; }
 
         bool Login(Credentials credentials);
         void Logout();
