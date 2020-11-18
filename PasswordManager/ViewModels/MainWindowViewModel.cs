@@ -3,8 +3,8 @@ using PasswordManager.Models;
 using PasswordManager.Services;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System.Collections.Generic;
-using System.Windows;
 
 namespace PasswordManager.ViewModels
 {
@@ -12,11 +12,30 @@ namespace PasswordManager.ViewModels
     {
         private readonly IGeneratorService _generatorService;
         private readonly IDataService _dataService;
+        private readonly IDialogService _dialogService;
+        private readonly ICopyService _copyService;
+        private readonly IAccountService _loginService;
 
-        public MainWindowViewModel(IGeneratorService generatorService, IDataService dataService)
+        public MainWindowViewModel(IGeneratorService generatorService, IDataService dataService, 
+            IDialogService dialogService, ICopyService copyService, IAccountService loginService)
         {
             _generatorService = generatorService;
             _dataService = dataService;
+            _dialogService = dialogService;
+            _copyService = copyService;
+            _loginService = loginService;
+
+            SetTitle();
+        }
+
+        private void SetTitle()
+        {
+            Title = $"{Literals.AppName} - {_loginService.LoggedUser}";
+        }
+
+        private void LoginDialogCallBack(IDialogResult obj)
+        {
+            
         }
 
         private IEnumerable<PasswordSet> _passwords;
@@ -89,6 +108,13 @@ namespace PasswordManager.ViewModels
             set { SetProperty(ref _digits, value); }
         }
 
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
+        }
+
         private KeyTypes KeyType
         {
             get
@@ -129,12 +155,15 @@ namespace PasswordManager.ViewModels
 
         private DelegateCommand _copyCommand;
         public DelegateCommand CopyCommand =>
-            _copyCommand ?? (_copyCommand = new DelegateCommand(ExecuteCopyCommand));
+            _copyCommand ?? (_copyCommand = 
+            new DelegateCommand(ExecuteCopyCommand, CanExecuteCopyCommand)
+            .ObservesProperty(() => KeyValue));
+
+        private bool CanExecuteCopyCommand()
+            => KeyValue?.Length > 0;
 
         void ExecuteCopyCommand()
-        {
-            Clipboard.SetText(KeyValue); 
-        }
+            => _copyService.CopyText(KeyValue);
 
         private DelegateCommand _savePasswordCommand;
         public DelegateCommand SavePasswordCommand =>

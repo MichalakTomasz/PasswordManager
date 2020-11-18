@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Windows;
 
 namespace PasswordManager.Services
 {
-    public class CopyService
+    public class CopyService : ICopyService
     {
         public void CopyText(string text)
-        { }
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                Clipboard.SetText(text);
+        }
     }
 }
