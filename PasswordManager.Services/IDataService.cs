@@ -1,4 +1,5 @@
 ﻿using PasswordManager.EntityModels;
+using PasswordManager.Models;
 using System.Collections.Generic;
 
 namespace PasswordManager.Services
@@ -7,5 +8,7 @@ namespace PasswordManager.Services
     {
         IEnumerable<PasswordSet> GetPasswords();
         bool AddPassword(PasswordSet passwordSet);
+        bool CheckCredentials(Credentials credentials);
+        bool ExistUser(string username);
     }
 }

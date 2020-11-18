@@ -7,15 +7,15 @@ namespace PasswordManager.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly PasswordDbContext _context;
+        private readonly IDataService _dataService;
         private readonly IAppStateService _appStateService;
         private readonly ILogService _logService;
 
         public string LoggedUser { get; private set; }
         public bool IsLogged { get; private set; }
-        public AccountService(PasswordDbContext context, IAppStateService appStateService, ILogService logService)
+        public AccountService(IDataService dataService, IAppStateService appStateService, ILogService logService)
         {
-            _context = context;
+            _dataService = dataService;
             _appStateService = appStateService;
             _logService = logService;
             IsLogged = false;
@@ -24,15 +24,13 @@ namespace PasswordManager.Services
         {
             try
             {
-                if (credentials == null ||
-                string.IsNullOrWhiteSpace(credentials.Login) ||
-                string.IsNullOrWhiteSpace(credentials.Password))
+                if (string.IsNullOrWhiteSpace(credentials?.Login) ||
+                    string.IsNullOrWhiteSpace(credentials.Password))
                     throw new ArgumentNullException();
 
                 var login = credentials.Login.Trim().ToUpper();
                 var password = credentials.Password.Trim();
-                var result = _context.Users.Any(f =>
-                f.Username == login && f.EncryptedPassword == password);
+                var result = _dataService.CheckCredentials(credentials);
 
                 if (result)
                 {
