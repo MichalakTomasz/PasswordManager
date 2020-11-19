@@ -175,7 +175,7 @@ namespace PasswordManager.ViewModels
         void ExecuteSavePasswordCommand()
         {
             var passwordSet = new PasswordSet();
-            _dataService.AddPassword(passwordSet);
+            _dataService.SavePassword(passwordSet);
         }
 
         bool CanExecutePasswordCommand()

@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Username { get; set; }
-        public string EncryptedPassword { get; set; }
-        public string EncryptedKey { get; set; }
+        public byte[] EncryptedPassword { get; set; }
+        public byte[] EncryptedKey { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using PasswordManager.Models;
+﻿using PasswordManager.EntityModels;
+using PasswordManager.Models;
 using System;
 
 namespace PasswordManager.Services
@@ -8,14 +9,24 @@ namespace PasswordManager.Services
         private readonly IDataService _dataService;
         private readonly IAppStateService _appStateService;
         private readonly ILogService _logService;
+        private readonly IAesCryptographicService _aesCryptographicService;
+        private readonly IGenericCryptographicService _genericCryptographicService;
+        private readonly IDataBinarySerializeService _dataBinarySerializeService;
 
         public string LoggedUser { get; private set; }
         public bool IsLogged { get; private set; }
-        public AccountService(IDataService dataService, IAppStateService appStateService, ILogService logService)
+        public AccountService(IDataService dataService, IAppStateService appStateService, 
+            ILogService logService, IAesCryptographicService aesCryptographicService,
+            IGenericCryptographicService genericCryptographicService,
+            IDataBinarySerializeService dataBinarySerializeService)
         {
             _dataService = dataService;
             _appStateService = appStateService;
             _logService = logService;
+            _aesCryptographicService = aesCryptographicService;
+            _genericCryptographicService = genericCryptographicService;
+            _dataBinarySerializeService = dataBinarySerializeService;
+
             IsLogged = false;
         }
         public bool Login(Credentials credentials)
@@ -26,12 +37,21 @@ namespace PasswordManager.Services
                     string.IsNullOrWhiteSpace(credentials.Password))
                     throw new ArgumentNullException();
 
-                var login = credentials.Login.Trim();
-                var result = _dataService.CheckCredentials(credentials);
+                var user = _dataService.GetUser(credentials.Login);
+                var result = false;
+                if (user != null)
+                {
+                    var decryptedUserKeyByteBuffer = _genericCryptographicService.Decrypt(user.EncryptedKey);
+                    var userKey = _dataBinarySerializeService.Deserialize<AesKey>(decryptedUserKeyByteBuffer);
+                    _aesCryptographicService.Key = userKey;
+                    var decryptedPasswordByteBuffer =_aesCryptographicService.Decrypt(user.EncryptedPassword);
+                    var password = _dataBinarySerializeService.Deserialize<string>(decryptedPasswordByteBuffer);
+                    result = credentials.Password == password;
+                }
 
                 if (result)
                 {
-                    LoggedUser = login;
+                    LoggedUser = credentials.Login.Trim();
                     IsLogged = true;
                     return true;
                 }
@@ -58,9 +78,32 @@ namespace PasswordManager.Services
             IsLogged = false;
         }
 
-        public bool Register(Credentials credentials)
+        public void Register(Credentials credentials)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var userKey = _aesCryptographicService.GenerateKey();
+                _aesCryptographicService.Key = userKey;
+                var userKeyByteBuffer = _dataBinarySerializeService.Serialize<AesKey>(userKey);
+                var encryptedUserKey = _genericCryptographicService.Encrypt(userKeyByteBuffer);
+
+                var passwordByteBuffer = _dataBinarySerializeService.Serialize<string>(credentials.Password);
+                var encryptedPassword = _aesCryptographicService.Encrypt(passwordByteBuffer);
+                
+                var newUser = new User
+                {
+                    Username = credentials.Login.Trim().ToUpper(),
+                    EncryptedKey = encryptedUserKey,
+                    EncryptedPassword = encryptedPassword
+                };
+                _dataService.SaveUser(newUser);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError($"{nameof(AccountService)} {nameof(AccountService.Register)} error: {e.Message}");
+                if (_appStateService.IsInDebugMode)
+                    throw;
+            }
         }
 
         public bool RemindPassword(string username)

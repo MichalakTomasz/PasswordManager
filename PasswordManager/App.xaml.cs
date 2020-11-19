@@ -35,7 +35,9 @@ namespace PasswordManager
             containerRegistry.RegisterSingleton<IAccountService, AccountService>();
             var dbContextOptions = GetDbcontextOptions();
             containerRegistry.RegisterInstance<DbContextService>(new DbContextService(dbContextOptions));
+            containerRegistry.Register<IGenericCryptographicService, GenericCryptographicService>();
 
+            
             containerRegistry.RegisterDialog<Views.LoginContent, LoginContentViewModel>();
 
         }

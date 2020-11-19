@@ -1,5 +1,4 @@
 ﻿using PasswordManager.EntityModels;
-using PasswordManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +19,7 @@ namespace PasswordManager.Services
             _commonService = commonService;
         }
 
-        public bool AddPassword(PasswordSet passwordSet)
+        public void SavePassword(PasswordSet passwordSet)
         {
             try
             {
@@ -33,16 +32,33 @@ namespace PasswordManager.Services
                 using var context = _dbContextService.GetContext();
                 context.Add(passwordSet);
                 context.SaveChanges();
-
-                return true;
             }
             catch (Exception e)
             {
                 _logService.LogError(e);
                 if (_commonService.IsInDebugMode)
                     throw;
-                else
-                    return default;
+            }
+        }
+
+        public void SaveUser(User user)
+        {
+            try
+            {
+                if (user == null ||
+                    string.IsNullOrWhiteSpace(user.Username) ||
+                    user.EncryptedPassword.Length == 0)
+                    throw new ArgumentException();
+
+                using var context = _dbContextService.GetContext();
+                context.Add(user);
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                if (_commonService.IsInDebugMode)
+                    throw;
             }
         }
 
@@ -54,20 +70,18 @@ namespace PasswordManager.Services
             }
         }
 
-        public bool CheckCredentials(Credentials credentials)
+        public User GetUser(string username)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(credentials?.Login) ||
-                    string.IsNullOrWhiteSpace(credentials.Password))
+                if (string.IsNullOrWhiteSpace(username))
                     throw new ArgumentNullException();
 
                 using var context = _dbContextService.GetContext();
-                var exist = context.Users.Any(u =>
-                u.Username == credentials.Login.Trim().ToUpper() && 
-                u.EncryptedPassword == credentials.Password);
+                var user = context.Users.FirstOrDefault(u => 
+                u.Username == username.Trim().ToUpper());
                 
-                return exist;
+                return user;
             }
             catch (Exception e)
             {
@@ -79,7 +93,7 @@ namespace PasswordManager.Services
             }
         }
 
-        public bool ExistUser(string username)
+        public bool UserExist(string username)
         {
             try
             {

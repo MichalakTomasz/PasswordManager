@@ -7,8 +7,9 @@ namespace PasswordManager.Services
     public interface IDataService
     {
         IEnumerable<PasswordSet> GetPasswords();
-        bool AddPassword(PasswordSet passwordSet);
-        bool CheckCredentials(Credentials credentials);
-        bool ExistUser(string username);
+        void SavePassword(PasswordSet passwordSet);
+        void SaveUser(User user);
+        User GetUser(string username);
+        bool UserExist(string username);
     }
 }
