@@ -1,5 +1,4 @@
-﻿using PasswordManager.Context;
-using PasswordManager.EntityModels;
+﻿using PasswordManager.EntityModels;
 using PasswordManager.Models;
 using System;
 using System.Collections.Generic;
@@ -9,14 +8,14 @@ namespace PasswordManager.Services
 {
     public class DataService : IDataService
     {
-        private readonly PasswordDbContext _context;
+        private readonly DbContextService _dbContextService;
         private readonly ILogService _logService;
         private readonly IAppStateService _commonService;
 
-        public DataService(PasswordDbContext passwordDbContext, ILogService logService, 
+        public DataService(DbContextService dbContextService, ILogService logService, 
             IAppStateService commonService)
         {
-            _context = passwordDbContext;
+            _dbContextService = dbContextService;
             _logService = logService;
             _commonService = commonService;
         }
@@ -25,16 +24,15 @@ namespace PasswordManager.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(passwordSet?.EncryptedPassword) || 
-                    string.IsNullOrWhiteSpace(passwordSet?.Username) || 
-                    string.IsNullOrWhiteSpace(passwordSet.Name))
+                if (string.IsNullOrWhiteSpace(passwordSet?.EncryptedPassword) ||
+                    string.IsNullOrWhiteSpace(passwordSet?.Username) ||
+                    string.IsNullOrWhiteSpace(passwordSet.Name) ||
+                    passwordSet.User == null)
                     throw new ArgumentNullException();
 
-                using (var context = _context)
-                {
-                    context.Add(passwordSet);
-                    context.SaveChanges();
-                }
+                using var context = _dbContextService.GetContext();
+                context.Add(passwordSet);
+                context.SaveChanges();
 
                 return true;
             }
@@ -50,7 +48,7 @@ namespace PasswordManager.Services
 
         public IEnumerable<PasswordSet> GetPasswords()
         {
-            using (var context = _context)
+            using (var context = _dbContextService.GetContext())
             {
                 return context.Passwords.ToList();
             }
@@ -64,8 +62,8 @@ namespace PasswordManager.Services
                     string.IsNullOrWhiteSpace(credentials.Password))
                     throw new ArgumentNullException();
 
-                using var context = _context;
-                var exist = _context.Users.Any(u =>
+                using var context = _dbContextService.GetContext();
+                var exist = context.Users.Any(u =>
                 u.Username == credentials.Login.Trim().ToUpper() && 
                 u.EncryptedPassword == credentials.Password);
                 
@@ -88,8 +86,8 @@ namespace PasswordManager.Services
                 if (string.IsNullOrWhiteSpace(username))
                     throw new ArgumentNullException();
 
-                using var context = _context;
-                var exist = _context.Users.Any(u =>
+                using var context = _dbContextService.GetContext();
+                var exist = context.Users.Any(u =>
                 u.Username == username.Trim().ToUpper());
                 return exist;
             }

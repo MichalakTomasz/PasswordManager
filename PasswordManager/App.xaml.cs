@@ -33,9 +33,8 @@ namespace PasswordManager
             containerRegistry.Register<IExitService, ExitService>();
             containerRegistry.Register<ICopyService, CopyService>();
             containerRegistry.RegisterSingleton<IAccountService, AccountService>();
-
             var dbContextOptions = GetDbcontextOptions();
-            containerRegistry.RegisterInstance(new PasswordDbContext(dbContextOptions));
+            containerRegistry.RegisterInstance<DbContextService>(new DbContextService(dbContextOptions));
 
             containerRegistry.RegisterDialog<Views.LoginContent, LoginContentViewModel>();
 

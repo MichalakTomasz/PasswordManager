@@ -1,7 +1,5 @@
-﻿using PasswordManager.Context;
-using PasswordManager.Models;
+﻿using PasswordManager.Models;
 using System;
-using System.Linq;
 
 namespace PasswordManager.Services
 {
@@ -28,8 +26,7 @@ namespace PasswordManager.Services
                     string.IsNullOrWhiteSpace(credentials.Password))
                     throw new ArgumentNullException();
 
-                var login = credentials.Login.Trim().ToUpper();
-                var password = credentials.Password.Trim();
+                var login = credentials.Login.Trim();
                 var result = _dataService.CheckCredentials(credentials);
 
                 if (result)
