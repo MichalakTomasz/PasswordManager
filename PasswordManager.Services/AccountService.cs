@@ -78,7 +78,7 @@ namespace PasswordManager.Services
             IsLogged = false;
         }
 
-        public void Register(Credentials credentials)
+        public void Register(RegisterData registerData)
         {
             try
             {
@@ -87,14 +87,20 @@ namespace PasswordManager.Services
                 var userKeyByteBuffer = _dataBinarySerializeService.Serialize<AesKey>(userKey);
                 var encryptedUserKey = _genericCryptographicService.Encrypt(userKeyByteBuffer);
 
-                var passwordByteBuffer = _dataBinarySerializeService.Serialize<string>(credentials.Password);
+                var passwordByteBuffer = _dataBinarySerializeService.Serialize<string>(registerData.Password);
                 var encryptedPassword = _aesCryptographicService.Encrypt(passwordByteBuffer);
-                
+                var secondPasswordByteBuffer = _dataBinarySerializeService.Serialize<string>(registerData.SecondPassword);
+                var encryptedSecondPassword = _aesCryptographicService.Encrypt(secondPasswordByteBuffer);
+                var secondPasswordQuestionByteBuffer = _dataBinarySerializeService.Serialize<string>(registerData.SecondPasswordQuestion);
+                var encryptedSecondPasswordQuestion = _aesCryptographicService.Encrypt(secondPasswordQuestionByteBuffer);
+
                 var newUser = new User
                 {
-                    Username = credentials.Login.Trim().ToUpper(),
+                    Username = registerData.Login.Trim().ToUpper(),
                     EncryptedKey = encryptedUserKey,
-                    EncryptedPassword = encryptedPassword
+                    EncryptedPassword = encryptedPassword,
+                    EncryptedSecondPassword = encryptedSecondPassword,
+                    EncryptedSecondPasswordQuestion = encryptedSecondPasswordQuestion
                 };
                 _dataService.SaveUser(newUser);
             }

@@ -12,25 +12,23 @@ namespace PasswordManager.ViewModels
     {
         private readonly IGeneratorService _generatorService;
         private readonly IDataService _dataService;
-        private readonly IDialogService _dialogService;
         private readonly ICopyService _copyService;
-        private readonly IAccountService _loginService;
+        private readonly IAccountService _accountService;
 
         public MainWindowViewModel(IGeneratorService generatorService, IDataService dataService, 
-            IDialogService dialogService, ICopyService copyService, IAccountService loginService)
+            ICopyService copyService, IAccountService acconuntService)
         {
             _generatorService = generatorService;
             _dataService = dataService;
-            _dialogService = dialogService;
             _copyService = copyService;
-            _loginService = loginService;
+            _accountService = acconuntService;
 
             SetTitle();
         }
 
         private void SetTitle()
         {
-            Title = $"{Literals.AppName} - {_loginService.LoggedUser}";
+            Title = $"{Literals.AppName} - {_accountService.LoggedUser}";
         }
 
         private void LoginDialogCallBack(IDialogResult obj)

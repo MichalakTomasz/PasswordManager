@@ -1,22 +1,19 @@
-﻿using Prism.Ioc;
-using PasswordManager.Views;
-using System.Windows;
-using PasswordManager.Services;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PasswordManager.Context;
-using System.Configuration;
-using Prism.Modularity;
 using PasswordManager.LoginContent;
-using Prism.Services.Dialogs;
+using PasswordManager.Services;
 using PasswordManager.ViewModels;
-using PasswordManager.Models;
+using PasswordManager.Views;
+using Prism.Ioc;
+using Prism.Modularity;
+using Prism.Services.Dialogs;
+using System.Configuration;
+using System.Windows;
 
 namespace PasswordManager
 {
     public partial class App
     {
-        private IAccountService _loginServie;
-
         protected override Window CreateShell()
         {
             return Container.Resolve<MainWindow>();
@@ -39,7 +36,7 @@ namespace PasswordManager
 
             
             containerRegistry.RegisterDialog<Views.LoginContent, LoginContentViewModel>();
-
+            containerRegistry.RegisterDialog<Views.RegisterContent, RegisterContentViewModel>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
@@ -49,7 +46,7 @@ namespace PasswordManager
 
         private DbContextOptions<PasswordDbContext> GetDbcontextOptions()
         {
-            var dbPath = @"..\PasswordDbSqlite.db";
+            var dbPath = @"D:\Repos\PasswordManager\PasswordDbSqlite.db";
             var connectionString = InjectPathToConnectionString(dbPath);
             var dbContextBuilder = new DbContextOptionsBuilder<PasswordDbContext>();
             dbContextBuilder.UseSqlite(connectionString);
@@ -65,20 +62,7 @@ namespace PasswordManager
         {
             base.InitializeShell(shell);
             var dialogService = Container.Resolve<IDialogService>();
-            _loginServie = Container.Resolve<IAccountService>();
-            dialogService.ShowDialog(nameof(LoginContent), LoginDialogCallBack);
-        }
-
-        private void LoginDialogCallBack(IDialogResult dialogResult)
-        {
-            var Login = dialogResult.Parameters.GetValue<string>(Literals.Login);
-            var password = dialogResult.Parameters.GetValue<string>(Literals.Password);
-            var credentials = new Credentials
-            {
-                Login = Login,
-                Password = password
-            };
-            _loginServie.Login(credentials);
+            dialogService.ShowDialog(nameof(LoginContent));
         }
     }
 }

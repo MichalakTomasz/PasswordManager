@@ -12,13 +12,13 @@
         <Style TargetType="Window">
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
             <Setter Property="ResizeMode" Value="NoResize"/>
-            <Setter Property="ShowInTaskbar" Value="False"/>
             <Setter Property="SizeToContent" Value="WidthAndHeight"/>
             <Setter Property="WindowStyle" Value="None"/>
         </Style>
     </prism:Dialog.WindowStyle>
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -34,11 +34,12 @@
         <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Login" />
         <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="Password"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="Hasło"/>
         <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"/>
-        <Button Grid.Row="5" Grid.Column="0" Content="Login" Command="{Binding LoginCommand}"/>
-        <Button Grid.Row="5" Grid.Column="1" Content="Exit" Command="{Binding ExitCommand}"/>
-        <Button Grid.Row="6" Grid.Column="0" Command="{Binding RegisterCommand}" Content="Register"/>
-        <Button Grid.Row="6" Grid.Column="1" Command="{Binding RemindPasswordCommand}" Content="Remind password"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding LoginErrorMessage}"/>
+        <Button Grid.Row="6" Grid.Column="0" Content="Zaloguj" Command="{Binding LoginCommand}"/>
+        <Button Grid.Row="7" Grid.Column="1" Content="Wyjście" Command="{Binding ExitCommand}"/>
+        <Button Grid.Row="7" Grid.Column="0" Command="{Binding RegisterCommand}" Content="Zarejestruj"/>
+        <Button Grid.Row="6" Grid.Column="1" Command="{Binding RemindPasswordCommand}" Content="Przypomnij hasło"/>
     </Grid>
 </UserControl>

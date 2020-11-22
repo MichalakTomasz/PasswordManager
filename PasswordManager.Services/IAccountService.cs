@@ -9,7 +9,7 @@ namespace PasswordManager.Services
 
         bool Login(Credentials credentials);
         void Logout();
-        void Register(Credentials credentials);
+        void Register(RegisterData registerData);
         bool RemindPassword(string username);
     }
 }

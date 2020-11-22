@@ -1,5 +1,7 @@
-﻿using PasswordManager.Models;
+﻿using PasswordManager.LoginContent.Views;
+using PasswordManager.Models;
 using PasswordManager.Services;
+using PasswordManager.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -9,10 +11,13 @@ namespace PasswordManager.ViewModels
 {
     public class LoginContentViewModel : BindableBase, IDialogAware
     {
-        public LoginContentViewModel(IExitService exitService)
+        public LoginContentViewModel(IExitService exitService, IAccountService accountService, 
+            IDialogService dialogService)
         {
             _exitService = exitService;
-
+            _accountService = accountService;
+            _dialogService = dialogService;
+            
             Title = Literals.Login;
         }
         public event Action<IDialogResult> RequestClose;
@@ -29,6 +34,13 @@ namespace PasswordManager.ViewModels
         {
             get { return _password; }
             set { SetProperty(ref _password, value); }
+        }
+
+        private string _errorMessage;
+        public string LoginErrorMessage
+        {
+            get { return _errorMessage; }
+            set { SetProperty(ref _errorMessage, value); }
         }
 
         public string Title { get; set; } 
@@ -55,13 +67,16 @@ namespace PasswordManager.ViewModels
 
         void ExecuteLoginCommand()
         {
-            var param = new DialogParameters
+            var credentials = new Credentials
             {
-                {Literals.Login, Login },
-                {Literals.Password, Password }
+                Login = Login,
+                Password = Password
             };
-            var dialogResult = new DialogResult(ButtonResult.OK, param);
-            RequestClose.Invoke(dialogResult);
+            var result = _accountService.Login(credentials);
+            if (result)
+                RequestClose.Invoke(null);
+            else
+                LoginErrorMessage = Literals.MessageLoginError;
         }
 
         bool CanExecuteLoginCommand()
@@ -69,6 +84,8 @@ namespace PasswordManager.ViewModels
 
         private DelegateCommand _exitCommand;
         private readonly IExitService _exitService;
+        private readonly IAccountService _accountService;
+        private readonly IDialogService _dialogService;
 
         public DelegateCommand ExitCommand =>
             _exitCommand ?? (_exitCommand = 
@@ -83,7 +100,7 @@ namespace PasswordManager.ViewModels
 
         void ExecuteRegisterCommand()
         {
-
+            _dialogService.ShowDialog(nameof(RegisterContent));
         }
 
         private DelegateCommand _remindPasswordCommand;
