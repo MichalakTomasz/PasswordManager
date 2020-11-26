@@ -105,14 +105,14 @@ namespace PasswordManager.ViewModels
             _dialogService.ShowDialog(nameof(RegisterContent));
         }
 
-        private DelegateCommand _remindPasswordCommand;
-        public DelegateCommand RemindPasswordCommand =>
-            _remindPasswordCommand ?? (_remindPasswordCommand =
-            new DelegateCommand(ExecuteRemindPasswordCommand));
+        private DelegateCommand _recoverPasswordCommand;
+        public DelegateCommand RecoverPasswordCommand =>
+            _recoverPasswordCommand ?? (_recoverPasswordCommand =
+            new DelegateCommand(ExecuteRecoverPasswordCommand));
 
-        void ExecuteRemindPasswordCommand()
+        void ExecuteRecoverPasswordCommand()
         {
-
+            _dialogService.ShowDialog(nameof(RecoverPasswordContent));
         }
 
         private DelegateCommand<RoutedEventArgs> _passwordCommand;
