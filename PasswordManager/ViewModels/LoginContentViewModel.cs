@@ -6,6 +6,8 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace PasswordManager.ViewModels
 {
@@ -60,10 +62,10 @@ namespace PasswordManager.ViewModels
 
         private DelegateCommand _loginCommand;
         public DelegateCommand LoginCommand =>
-            _loginCommand ?? (_loginCommand = 
+            _loginCommand ??= 
             new DelegateCommand(ExecuteLoginCommand, CanExecuteLoginCommand)
             .ObservesProperty(() => Login)
-            .ObservesProperty(() => Password));
+            .ObservesProperty(() => Password);
 
         void ExecuteLoginCommand()
         {
@@ -111,6 +113,16 @@ namespace PasswordManager.ViewModels
         void ExecuteRemindPasswordCommand()
         {
 
+        }
+
+        private DelegateCommand<RoutedEventArgs> _passwordCommand;
+        public DelegateCommand<RoutedEventArgs> PasswordCommand =>
+            _passwordCommand ?? (_passwordCommand = new DelegateCommand<RoutedEventArgs>(ExecutePasswordCommnad));
+
+        void ExecutePasswordCommnad(RoutedEventArgs e)
+        {
+            var passwordBox = e.OriginalSource as PasswordBox;
+            Password = passwordBox.Password;
         }
     }
 }

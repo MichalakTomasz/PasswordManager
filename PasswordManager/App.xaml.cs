@@ -21,15 +21,17 @@ namespace PasswordManager
         
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<IAesCryptographicService, AesCryptographicService>();
+            containerRegistry.RegisterSingleton<IAccountService, AccountService>();
+
             containerRegistry.Register<IGeneratorService, GeneratorService>();
             containerRegistry.Register<IDataService, DataService>();
             containerRegistry.Register<ILogService, LogService>();
             containerRegistry.Register<IAppStateService, AppStateService>();
             containerRegistry.Register<IDataBinarySerializeService, DataBinarySerializeService>();
-            containerRegistry.Register<IAesCryptographicService, AesCryptographicService>();
             containerRegistry.Register<IExitService, ExitService>();
             containerRegistry.Register<ICopyService, CopyService>();
-            containerRegistry.RegisterSingleton<IAccountService, AccountService>();
+            
             var dbContextOptions = GetDbcontextOptions();
             containerRegistry.RegisterInstance<DbContextService>(new DbContextService(dbContextOptions));
             containerRegistry.Register<IGenericCryptographicService, GenericCryptographicService>();

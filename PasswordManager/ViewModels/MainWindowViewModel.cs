@@ -3,8 +3,9 @@ using PasswordManager.Models;
 using PasswordManager.Services;
 using Prism.Commands;
 using Prism.Mvvm;
-using Prism.Services.Dialogs;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace PasswordManager.ViewModels
 {
@@ -14,30 +15,28 @@ namespace PasswordManager.ViewModels
         private readonly IDataService _dataService;
         private readonly ICopyService _copyService;
         private readonly IAccountService _accountService;
+        private readonly IAesCryptographicService _aesCryptographicService;
+        private readonly IDataBinarySerializeService _dataBinarySerializeService;
 
         public MainWindowViewModel(IGeneratorService generatorService, IDataService dataService, 
-            ICopyService copyService, IAccountService acconuntService)
+            ICopyService copyService, IAccountService acconuntService, 
+            IAesCryptographicService aesCryptographicService, IDataBinarySerializeService dataBinarySerializeService)
         {
             _generatorService = generatorService;
             _dataService = dataService;
             _copyService = copyService;
             _accountService = acconuntService;
-
-            SetTitle();
+            _aesCryptographicService = aesCryptographicService;
+            _dataBinarySerializeService = dataBinarySerializeService;
         }
 
         private void SetTitle()
         {
-            Title = $"{Literals.AppName} - {_accountService.LoggedUser}";
+            Title = $"{Literals.AppName} - {_accountService.LoggedUser.Username}";
         }
 
-        private void LoginDialogCallBack(IDialogResult obj)
-        {
-            
-        }
-
-        private IEnumerable<PasswordSet> _passwords;
-        public IEnumerable<PasswordSet> Passwords
+        private ObservableCollection<PasswordModel> _passwords;
+        public ObservableCollection<PasswordModel> Passwords
         {
             get { return _passwords; }
             set { SetProperty(ref _passwords, value); }
@@ -172,12 +171,43 @@ namespace PasswordManager.ViewModels
 
         void ExecuteSavePasswordCommand()
         {
-            var passwordSet = new PasswordSet();
+            var passwordByteBuffer = _dataBinarySerializeService.Serialize<string>(KeyValue);
+            var encryptedPassword = _aesCryptographicService.Encrypt(passwordByteBuffer);
+
+            var passwordSet = new PasswordSet
+            {
+                Name = KeyName,
+                EncryptedPassword = encryptedPassword,
+                User = _accountService.LoggedUser,
+                Username = _accountService.LoggedUser.Username
+            };
             _dataService.SavePassword(passwordSet);
         }
 
         bool CanExecutePasswordCommand()
             => !string.IsNullOrWhiteSpace(KeyValue) &&
             !string.IsNullOrWhiteSpace(KeyName);
+
+        private DelegateCommand _loadedCommand;
+        public DelegateCommand LoadedCommand =>
+            _loadedCommand ?? (_loadedCommand = new DelegateCommand(ExecuteLoadedComand));
+
+        void ExecuteLoadedComand()
+        {
+            SetTitle();
+            
+            Passwords = new ObservableCollection<PasswordModel>(_dataService.GetPasswords());
+        }
+
+        private DelegateCommand<RoutedEventArgs> _passwordChangedCommand;
+        public DelegateCommand<RoutedEventArgs> PasswordChangedCommand =>
+            _passwordChangedCommand ?? (_passwordChangedCommand = new DelegateCommand<RoutedEventArgs>(ExecutePasswordChangedCommand));
+
+        void ExecutePasswordChangedCommand(RoutedEventArgs e)
+        {
+            var passwordBox = e.OriginalSource as PasswordBox;
+            
+            KeyValue = passwordBox.Password;
+        }
     }
 }

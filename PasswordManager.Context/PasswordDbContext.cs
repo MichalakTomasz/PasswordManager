@@ -25,6 +25,5 @@ namespace PasswordManager.Context
         //}
 
         #endregion For maiking migrations
-
     }
 }

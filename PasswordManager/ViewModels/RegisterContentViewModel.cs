@@ -4,6 +4,8 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace PasswordManager.ViewModels
 {
@@ -103,6 +105,28 @@ namespace PasswordManager.ViewModels
         void ExecuteBackCommand()
         {
             RequestClose.Invoke(null);
+        }
+
+        private DelegateCommand<RoutedEventArgs> _passwordCommand;
+        public DelegateCommand<RoutedEventArgs> PasswordCommand =>
+            _passwordCommand ?? (_passwordCommand = 
+            new DelegateCommand<RoutedEventArgs>(ExecutePasswordCommand));
+
+        void ExecutePasswordCommand(RoutedEventArgs e)
+        {
+            var passwordBox = e.OriginalSource as PasswordBox;
+            Password = passwordBox.Password;
+        }
+
+        private DelegateCommand<RoutedEventArgs> _confirmPasswordCommand;
+        public DelegateCommand<RoutedEventArgs> ConfirmPasswordCommand =>
+            _confirmPasswordCommand ?? (_confirmPasswordCommand = 
+            new DelegateCommand<RoutedEventArgs>(ExecuteConfirmPasswordCommand));
+
+        void ExecuteConfirmPasswordCommand(RoutedEventArgs e)
+        {
+            var passwordBox = e.OriginalSource as PasswordBox;
+            ConfirmPassword = passwordBox.Password;
         }
     }
 }

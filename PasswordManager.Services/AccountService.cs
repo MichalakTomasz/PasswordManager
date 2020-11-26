@@ -13,7 +13,7 @@ namespace PasswordManager.Services
         private readonly IGenericCryptographicService _genericCryptographicService;
         private readonly IDataBinarySerializeService _dataBinarySerializeService;
 
-        public string LoggedUser { get; private set; }
+        public User LoggedUser { get; private set; }
         public bool IsLogged { get; private set; }
         public AccountService(IDataService dataService, IAppStateService appStateService, 
             ILogService logService, IAesCryptographicService aesCryptographicService,
@@ -51,7 +51,7 @@ namespace PasswordManager.Services
 
                 if (result)
                 {
-                    LoggedUser = credentials.Login.Trim();
+                    LoggedUser = user;
                     IsLogged = true;
                     return true;
                 }
@@ -112,7 +112,7 @@ namespace PasswordManager.Services
             }
         }
 
-        public bool RemindPassword(string username)
+        public bool RecoverPassword(string username)
         {
             throw new NotImplementedException();
         }

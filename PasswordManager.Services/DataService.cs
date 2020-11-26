@@ -1,4 +1,5 @@
 ﻿using PasswordManager.EntityModels;
+using PasswordManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,27 +11,32 @@ namespace PasswordManager.Services
         private readonly DbContextService _dbContextService;
         private readonly ILogService _logService;
         private readonly IAppStateService _commonService;
+        private readonly IAesCryptographicService _aesCryptographicService;
+        private readonly IDataBinarySerializeService _dataBinarySerializeService;
 
         public DataService(DbContextService dbContextService, ILogService logService, 
-            IAppStateService commonService)
+            IAppStateService commonService, IAesCryptographicService aesCryptographicService,
+            IDataBinarySerializeService dataBinarySerializeService)
         {
             _dbContextService = dbContextService;
             _logService = logService;
             _commonService = commonService;
+            _aesCryptographicService = aesCryptographicService;
+            _dataBinarySerializeService = dataBinarySerializeService;
         }
 
         public void SavePassword(PasswordSet passwordSet)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(passwordSet?.EncryptedPassword) ||
-                    string.IsNullOrWhiteSpace(passwordSet?.Username) ||
+                if (string.IsNullOrWhiteSpace(passwordSet?.Username) ||
                     string.IsNullOrWhiteSpace(passwordSet.Name) ||
-                    passwordSet.User == null)
+                    passwordSet.User == null ||
+                    passwordSet.EncryptedPassword?.Count() == 0)
                     throw new ArgumentNullException();
 
                 using var context = _dbContextService.GetContext();
-                context.Add(passwordSet);
+                context.Attach(passwordSet);
                 context.SaveChanges();
             }
             catch (Exception e)
@@ -62,12 +68,27 @@ namespace PasswordManager.Services
             }
         }
 
-        public IEnumerable<PasswordSet> GetPasswords()
+        public IEnumerable<PasswordModel> GetPasswords()
         {
-            using (var context = _dbContextService.GetContext())
+            using var context = _dbContextService.GetContext();
+            var passwords = context.Passwords.ToList();
+            var passwordModels = new List<PasswordModel>();
+            passwords.ForEach(passwordSet =>
             {
-                return context.Passwords.ToList();
-            }
+                var encryptedPasswordBuffer = _aesCryptographicService.Decrypt(passwordSet.EncryptedPassword);
+                var password = _dataBinarySerializeService.Deserialize<string>(encryptedPasswordBuffer);
+                var passWordModel = new PasswordModel
+                {
+                    Id = passwordSet.Id,
+                    Name = passwordSet.Name,
+                    Usermane = passwordSet.Username,
+                    Password = password,
+                    Comment = passwordSet.Comment
+                };
+                passwordModels.Add(passWordModel);
+            });
+
+            return passwordModels;
         }
 
         public User GetUser(string username)

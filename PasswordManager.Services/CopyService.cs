@@ -6,7 +6,7 @@ namespace PasswordManager.Services
     {
         public void CopyText(string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if (!string.IsNullOrWhiteSpace(text))
                 Clipboard.SetText(text);
         }
     }

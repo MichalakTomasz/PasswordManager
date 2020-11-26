@@ -12,4 +12,8 @@
     <Style TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
+    <Style TargetType="PasswordBox">
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Height" Value="25"/>
+    </Style>
 </ResourceDictionary>
