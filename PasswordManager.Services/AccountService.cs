@@ -78,10 +78,14 @@ namespace PasswordManager.Services
             IsLogged = false;
         }
 
-        public void Register(RegisterData registerData)
+        public bool Register(RegisterData registerData)
         {
             try
             {
+                var existUser = _dataService.UserExist(registerData.Login.Trim().ToUpper());
+                if (existUser)
+                    return false;
+
                 var userKey = _aesCryptographicService.GenerateKey();
                 _aesCryptographicService.Key = userKey;
                 var userKeyByteBuffer = _dataBinarySerializeService.Serialize<AesKey>(userKey);
@@ -103,18 +107,52 @@ namespace PasswordManager.Services
                     EncryptedSecondPasswordQuestion = encryptedSecondPasswordQuestion
                 };
                 _dataService.SaveUser(newUser);
+
+                return true;
             }
             catch (Exception e)
             {
                 _logService.LogError($"{nameof(AccountService)} {nameof(AccountService.Register)} error: {e.Message}");
                 if (_appStateService.IsInDebugMode)
                     throw;
+                else
+                    return false;
             }
         }
 
-        public bool RecoverPassword(string username)
+        public PasswordData RecoverPassword(string username)
         {
-            throw new NotImplementedException();
+            var user = _dataService.GetUser(username);
+            if (user != null)
+            {
+                var encryptedPassword = user.EncryptedPassword;
+                var encryptedSecondPassword = user.EncryptedSecondPassword;
+                var encryptedPasswordQuestion = user.EncryptedSecondPasswordQuestion;
+                var EncryptedKey = user.EncryptedKey;
+                var keyByteBuffer = _genericCryptographicService.Decrypt(EncryptedKey);
+                var key = _dataBinarySerializeService.Deserialize<AesKey>(keyByteBuffer);
+                _aesCryptographicService.Key = key;
+
+                var decryptedPasswordByteBuffer = _aesCryptographicService.Decrypt(encryptedPassword);
+                var decryptedPassword = _dataBinarySerializeService.Deserialize<string>(decryptedPasswordByteBuffer);
+
+                var decryptedSecondPasswordByteBuffer = _aesCryptographicService.Decrypt(encryptedSecondPassword);
+                var decrypredSecondPassword = _dataBinarySerializeService.Deserialize<string>(decryptedSecondPasswordByteBuffer);
+
+                var decryptedQuestionPasswordByteBuffer = _aesCryptographicService.Decrypt(encryptedPasswordQuestion);
+                var decryptedQuestionPassword = _dataBinarySerializeService.Deserialize<string>(decryptedQuestionPasswordByteBuffer);
+                
+                var passwordData = new PasswordData
+                {
+                    Password = decryptedPassword,
+                    SecondPassword = decrypredSecondPassword,
+                    SecondPasswordQuestion = decryptedQuestionPassword
+                };
+
+                return passwordData;
+            }
+
+            return null;
         }
     }
 }

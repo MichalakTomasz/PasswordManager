@@ -64,6 +64,12 @@ namespace PasswordManager.ViewModels
             get { return _secondPasswordQuestion; }
             set { SetProperty(ref _secondPasswordQuestion, value); }
         }
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set { SetProperty(ref _errorMessage, value); }
+        }
 
         private DelegateCommand _registerCommand;
         public DelegateCommand RegisterCommand =>
@@ -84,8 +90,12 @@ namespace PasswordManager.ViewModels
                 SecondPassword = SecondPassword,
                 SecondPasswordQuestion = SecondPasswordQuestion
             };
-            _accountService.Register(registerData);
-            RequestClose.Invoke(null);
+            if (!_accountService.Register(registerData))
+                ErrorMessage = Literals.AccountExist;
+            else
+                RequestClose.Invoke(null);
+
+
         }
 
         bool CanExecuteRegisterCommand()
@@ -127,6 +137,16 @@ namespace PasswordManager.ViewModels
         {
             var passwordBox = e.OriginalSource as PasswordBox;
             ConfirmPassword = passwordBox.Password;
+        }
+        private DelegateCommand<RoutedEventArgs> _secondPasswordCommaand;
+        public DelegateCommand<RoutedEventArgs> SecondPasswordCommand =>
+            _secondPasswordCommaand ?? (_secondPasswordCommaand = 
+            new DelegateCommand<RoutedEventArgs>(ExecuteSecondPasswordCommand));
+
+        void ExecuteSecondPasswordCommand(RoutedEventArgs e)
+        {
+            var passwordBox = e.OriginalSource as PasswordBox;
+            SecondPassword = passwordBox.Password;
         }
     }
 }

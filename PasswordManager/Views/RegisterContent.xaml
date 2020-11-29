@@ -37,6 +37,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -54,17 +55,24 @@
         <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Text="Hasło"/>
         <PasswordBox Grid.Row="4" Grid.ColumnSpan="2">
             <b:Interaction.Triggers>
-                <b:EventTrigger EventName="ConfirmPasswordCommand">
+                <b:EventTrigger EventName="PasswordChanged">
                     <prism:InvokeCommandAction Command="{Binding ConfirmPasswordCommand}"/>
                 </b:EventTrigger>
             </b:Interaction.Triggers>
         </PasswordBox>
         <TextBlock Grid.Row="5" Grid.ColumnSpan="2" Text="Powtórz hasło"/>
-        <TextBox Grid.Row="6" Grid.ColumnSpan="2" Text="{Binding SecondPassword, UpdateSourceTrigger=PropertyChanged}"/>
+        <PasswordBox Grid.Row="6" Grid.ColumnSpan="2">
+            <b:Interaction.Triggers>
+                <b:EventTrigger EventName="PasswordChanged">
+                    <prism:InvokeCommandAction Command="{Binding SecondPasswordCommand}" TriggerParameterPath=""/>
+                </b:EventTrigger>
+            </b:Interaction.Triggers>
+        </PasswordBox>
         <TextBlock Grid.Row="7" Grid.ColumnSpan="2" Text="Hasło pomocnicze"/>
         <TextBox Grid.Row="8" Grid.ColumnSpan="2" Text="{Binding SecondPasswordQuestion, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="9" Grid.ColumnSpan="2" Text="Pytanie pomocnicze"/>
-        <Button Grid.Row="10" Grid.Column="0" Content="Rejestruj" Command="{Binding RegisterCommand}"/>
-        <Button Grid.Row="10" Grid.Column="1" Content="Powrót" Command="{Binding BackCommand}"/>
+        <TextBlock Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Text="{Binding ErrorMessage}"/>
+        <Button Grid.Row="11" Grid.Column="0" Content="Rejestruj" Command="{Binding RegisterCommand}"/>
+        <Button Grid.Row="11" Grid.Column="1" Content="Powrót" Command="{Binding BackCommand}"/>
     </Grid>
 </UserControl>

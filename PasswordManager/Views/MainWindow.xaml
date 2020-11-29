@@ -54,7 +54,6 @@
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="Nazwa"/>
                 <Button Grid.Row="2" Grid.Column="3" Content="Zapisz" Command="{Binding SavePasswordCommand}"/>
                 <TextBox Grid.Row="2" Text="{Binding Login}"/>
-                <pb:CustomPasswordBox Grid.Row="3" Grid.Column="3" Password="{Binding Password}" IsVisiblePassword="False"/>
                 <TextBlock x:Name="backgroundPassword"/>
             </Grid>
         </GroupBox>
@@ -67,7 +66,6 @@
                 <DataGridTextColumn Header="Nazwa" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Login" Binding="{Binding Username}"/>
                 <DataGridTextColumn Header="Hasło" Binding="{Binding Password}"/>
-                <pc:DataGridPasswordColumn Header="Password" Binding="{Binding Password}"/>
                 <DataGridTextColumn Header="Komentarz" Binding="{Binding Comment}"/>
             </DataGrid.Columns>
         </DataGrid>

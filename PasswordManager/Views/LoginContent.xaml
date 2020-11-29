@@ -44,9 +44,9 @@
         <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="Hasło"/>
         <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"/>
         <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding LoginErrorMessage}"/>
-        <Button Grid.Row="6" Grid.Column="0" Content="Zaloguj" Command="{Binding LoginCommand}"/>
+        <Button Grid.Row="6" Grid.Column="0" Content="Zaloguj" Command="{Binding LoginCommand}" IsDefault="True"/>
         <Button Grid.Row="7" Grid.Column="1" Content="Wyjście" Command="{Binding ExitCommand}"/>
         <Button Grid.Row="7" Grid.Column="0" Command="{Binding RegisterCommand}" Content="Zarejestruj"/>
-        <Button Grid.Row="6" Grid.Column="1" Command="{Binding RecoverPasswordCommand}" Content="Przywróć hasło"/>
+        <Button Grid.Row="6" Grid.Column="1" Command="{Binding RecoverPasswordCommand}" Content="Odzyskaj hasło"/>
     </Grid>
 </UserControl>
