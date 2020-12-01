@@ -16,6 +16,7 @@
             <Setter Property="ShowInTaskbar" Value="False"/>
             <Setter Property="SizeToContent" Value="WidthAndHeight"/>
             <Setter Property="WindowStyle" Value="None"/>
+            <Setter Property="ShowInTaskbar" Value="False"/>
         </Style>
     </prism:Dialog.WindowStyle>
     <UserControl.Resources>
@@ -43,36 +44,37 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="Login"/>
-        <PasswordBox Grid.Row="2" Grid.ColumnSpan="2">
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Rejestracja" Style="{StaticResource Title}"/>
+        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="Login"/>
+        <PasswordBox Grid.Row="3" Grid.ColumnSpan="2">
             <b:Interaction.Triggers>
                 <b:EventTrigger EventName="PasswordChanged">
                     <prism:InvokeCommandAction Command="{Binding PasswordCommand}" TriggerParameterPath=""/>
                 </b:EventTrigger>
             </b:Interaction.Triggers>
         </PasswordBox>
-        <TextBlock Grid.Row="3" Grid.ColumnSpan="2" Text="Hasło"/>
-        <PasswordBox Grid.Row="4" Grid.ColumnSpan="2">
+        <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="Hasło"/>
+        <PasswordBox Grid.Row="5" Grid.ColumnSpan="2">
             <b:Interaction.Triggers>
                 <b:EventTrigger EventName="PasswordChanged">
                     <prism:InvokeCommandAction Command="{Binding ConfirmPasswordCommand}"/>
                 </b:EventTrigger>
             </b:Interaction.Triggers>
         </PasswordBox>
-        <TextBlock Grid.Row="5" Grid.ColumnSpan="2" Text="Powtórz hasło"/>
-        <PasswordBox Grid.Row="6" Grid.ColumnSpan="2">
+        <TextBlock Grid.Row="6" Grid.ColumnSpan="2" Text="Powtórz hasło"/>
+        <PasswordBox Grid.Row="7" Grid.ColumnSpan="2">
             <b:Interaction.Triggers>
                 <b:EventTrigger EventName="PasswordChanged">
                     <prism:InvokeCommandAction Command="{Binding SecondPasswordCommand}" TriggerParameterPath=""/>
                 </b:EventTrigger>
             </b:Interaction.Triggers>
         </PasswordBox>
-        <TextBlock Grid.Row="7" Grid.ColumnSpan="2" Text="Hasło pomocnicze"/>
-        <TextBox Grid.Row="8" Grid.ColumnSpan="2" Text="{Binding SecondPasswordQuestion, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="9" Grid.ColumnSpan="2" Text="Pytanie pomocnicze"/>
-        <TextBlock Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Text="{Binding ErrorMessage}"/>
-        <Button Grid.Row="11" Grid.Column="0" Content="Rejestruj" Command="{Binding RegisterCommand}"/>
-        <Button Grid.Row="11" Grid.Column="1" Content="Powrót" Command="{Binding BackCommand}"/>
+        <TextBlock Grid.Row="8" Grid.ColumnSpan="2" Text="Hasło pomocnicze"/>
+        <TextBox Grid.Row="9" Grid.ColumnSpan="2" Text="{Binding SecondPasswordQuestion, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBlock Grid.Row="10" Grid.ColumnSpan="2" Text="Pytanie pomocnicze"/>
+        <TextBlock Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Text="{Binding ErrorMessage}"/>
+        <Button Grid.Row="12" Grid.Column="0" Content="Rejestruj" Command="{Binding RegisterCommand}"/>
+        <Button Grid.Row="13" Grid.Column="1" Content="Powrót" Command="{Binding BackCommand}"/>
     </Grid>
 </UserControl>

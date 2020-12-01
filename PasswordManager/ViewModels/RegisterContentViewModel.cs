@@ -83,7 +83,7 @@ namespace PasswordManager.ViewModels
 
         void ExecuteRegisterCommand()
         {
-            var registerData = new RegisterData
+            var registerData = new RegisterModel
             {
                 Login = Login,
                 Password = Password,
@@ -94,8 +94,6 @@ namespace PasswordManager.ViewModels
                 ErrorMessage = Literals.AccountExist;
             else
                 RequestClose.Invoke(null);
-
-
         }
 
         bool CanExecuteRegisterCommand()

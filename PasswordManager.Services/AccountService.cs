@@ -78,7 +78,7 @@ namespace PasswordManager.Services
             IsLogged = false;
         }
 
-        public bool Register(RegisterData registerData)
+        public bool Register(RegisterModel registerData)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace PasswordManager.Services
                     EncryptedSecondPassword = encryptedSecondPassword,
                     EncryptedSecondPasswordQuestion = encryptedSecondPasswordQuestion
                 };
-                _dataService.SaveUser(newUser);
+                _dataService.AddUser(newUser);
 
                 return true;
             }
@@ -153,6 +153,47 @@ namespace PasswordManager.Services
             }
 
             return null;
+        }
+        public IOperationResult ChangePassword(ChangePasswordModel changePasswordModel)
+        {
+            try
+            {
+                if (changePasswordModel == null)
+                    throw new ArgumentNullException();
+
+                var user = _dataService.GetUser(changePasswordModel.Username);
+                if (user != null)
+                {
+                    var decryptedKeyByteBuffer = _genericCryptographicService.Decrypt(user.EncryptedKey);
+                    var decryptedKey = _dataBinarySerializeService.Deserialize<AesKey>(decryptedKeyByteBuffer);
+                    _aesCryptographicService.Key = decryptedKey;
+                    var decryptedPasswordByteBuffer = _aesCryptographicService.Decrypt(user.EncryptedPassword);
+                    var decryptedPassword = _dataBinarySerializeService.Deserialize<string>(decryptedPasswordByteBuffer);
+
+                    if (changePasswordModel.OldPassword == decryptedPassword)
+                    {
+                        var newPasswordByteBuffer = _dataBinarySerializeService.Serialize<string>(changePasswordModel.NewPassword);
+                        var encryptedNewPassword = _aesCryptographicService.Encrypt(newPasswordByteBuffer);
+                        user.EncryptedPassword = encryptedNewPassword;
+                        _dataService.UpdateUser(user);
+                    }
+                    else
+                    {
+                        return new OperationResult(ResultType.Faild, Literals.WrongPassword);
+                    }
+
+                    return new OperationResult(ResultType.Success);
+                }
+                return new OperationResult(ResultType.Faild, Literals.AccountNotExist);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                if (_appStateService.IsInDebugMode)
+                    throw;
+                else
+                    return new OperationResult(ResultType.Faild, e.Message);
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace PasswordManager.Models
 {
-    public class RegisterData : Credentials
+    public class RegisterModel : Credentials
     {
         public string SecondPassword { get; set; }
         public string SecondPasswordQuestion { get; set; }

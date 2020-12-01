@@ -10,17 +10,17 @@ namespace PasswordManager.Services
     {
         private readonly DbContextService _dbContextService;
         private readonly ILogService _logService;
-        private readonly IAppStateService _commonService;
+        private readonly IAppStateService _appStateService;
         private readonly IAesCryptographicService _aesCryptographicService;
         private readonly IDataBinarySerializeService _dataBinarySerializeService;
 
         public DataService(DbContextService dbContextService, ILogService logService, 
-            IAppStateService commonService, IAesCryptographicService aesCryptographicService,
+            IAppStateService appStateService, IAesCryptographicService aesCryptographicService,
             IDataBinarySerializeService dataBinarySerializeService)
         {
             _dbContextService = dbContextService;
             _logService = logService;
-            _commonService = commonService;
+            _appStateService = appStateService;
             _aesCryptographicService = aesCryptographicService;
             _dataBinarySerializeService = dataBinarySerializeService;
         }
@@ -42,12 +42,12 @@ namespace PasswordManager.Services
             catch (Exception e)
             {
                 _logService.LogError(e);
-                if (_commonService.IsInDebugMode)
+                if (_appStateService.IsInDebugMode)
                     throw;
             }
         }
 
-        public void SaveUser(User user)
+        public void AddUser(User user)
         {
             try
             {
@@ -63,7 +63,28 @@ namespace PasswordManager.Services
             catch (Exception e)
             {
                 _logService.LogError(e);
-                if (_commonService.IsInDebugMode)
+                if (_appStateService.IsInDebugMode)
+                    throw;
+            }
+        }
+
+        public void UpdateUser(User user)
+        {
+            try
+            {
+                if (user == null)
+                    throw new ArgumentNullException();
+
+                using var context = _dbContextService.GetContext();
+                context.Update(user);
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                if (_appStateService.IsInDebugMode)
+                    return;
+                else
                     throw;
             }
         }
@@ -107,7 +128,7 @@ namespace PasswordManager.Services
             catch (Exception e)
             {
                 _logService.LogError(e);
-                if (_commonService.IsInDebugMode)
+                if (_appStateService.IsInDebugMode)
                     throw;
                 else
                     return default;
@@ -129,7 +150,7 @@ namespace PasswordManager.Services
             catch (Exception e)
             {
                 _logService.LogError(e);
-                if (_commonService.IsInDebugMode)
+                if (_appStateService.IsInDebugMode)
                     throw;
                 else
                     return default;

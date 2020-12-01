@@ -124,5 +124,13 @@ namespace PasswordManager.ViewModels
             var passwordBox = e.OriginalSource as PasswordBox;
             Password = passwordBox.Password;
         }
+        private DelegateCommand _changePasswordCommand;
+        public DelegateCommand ChangePasswordCommand =>
+            _changePasswordCommand ?? (_changePasswordCommand = new DelegateCommand(ExecuteChangePasswordCommand));
+
+        void ExecuteChangePasswordCommand()
+        {
+            _dialogService.ShowDialog(nameof(ChangePasswordContent));
+        }
     }
 }

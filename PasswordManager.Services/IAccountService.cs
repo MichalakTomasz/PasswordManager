@@ -10,7 +10,8 @@ namespace PasswordManager.Services
 
         bool Login(Credentials credentials);
         void Logout();
-        bool Register(RegisterData registerData);
+        bool Register(RegisterModel registerData);
         PasswordData RecoverPassword(string username);
+        IOperationResult ChangePassword(ChangePasswordModel changePasswordModel);
     }
 }

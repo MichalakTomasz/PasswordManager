@@ -40,6 +40,7 @@ namespace PasswordManager
             containerRegistry.RegisterDialog<Views.LoginContent, LoginContentViewModel>();
             containerRegistry.RegisterDialog<Views.RegisterContent, RegisterContentViewModel>();
             containerRegistry.RegisterDialog<Views.RecoverPasswordContent>();
+            containerRegistry.RegisterDialog<Views.ChangePasswordContent>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

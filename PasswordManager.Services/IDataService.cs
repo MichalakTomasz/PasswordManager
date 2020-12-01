@@ -8,7 +8,8 @@ namespace PasswordManager.Services
     {
         IEnumerable<PasswordModel> GetPasswords();
         void SavePassword(PasswordSet passwordSet);
-        void SaveUser(User user);
+        void AddUser(User user);
+        void UpdateUser(User user);
         User GetUser(string username);
         bool UserExist(string username);
     }
