@@ -7,6 +7,8 @@
         xmlns:pc="clr-namespace:DataGridPasswordColumn;assembly=DataGridPasswordColumn"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title}" Height="600" Width="800"
+        MinWidth="500"
+        MinHeight="200"
         WindowStartupLocation="CenterScreen">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
@@ -19,10 +21,9 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Generator" Height="330" Margin="5">
+        <GroupBox Grid.Row="0" Header="Generator" Height="190" Margin="5">
             <Grid Margin="10">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
@@ -36,7 +37,7 @@
                 </Grid.ColumnDefinitions>
                     <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Hasło"/>
-                    <TextBox Grid.Row="0" Grid.Column="2" Width="30" Text="{Binding KeyLength}" />
+                    <TextBox Grid.Row="0" Grid.Column="2" Width="30" Text="{Binding KeyLength, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Grid.Row="1" Grid.Column="2" Text="Długość" />
                 <Button Grid.Row="0" Grid.Column="3" Content="Generuj" Command="{Binding GenerateKeyCommand}"/>
                 <Button Grid.Row="1" Grid.Column="3" Content="Kopiuj" Command="{Binding CopyCommand}"/>
@@ -53,7 +54,7 @@
                 <TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding KeyName, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="Nazwa"/>
                 <Button Grid.Row="2" Grid.Column="3" Content="Zapisz" Command="{Binding SavePasswordCommand}"/>
-                <TextBox Grid.Row="2" Text="{Binding Login}"/>
+                <TextBox Grid.Row="2" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock x:Name="backgroundPassword"/>
             </Grid>
         </GroupBox>
@@ -66,6 +67,18 @@
                 <DataGridTextColumn Header="Nazwa" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Login" Binding="{Binding Username}"/>
                 <DataGridTextColumn Header="Hasło" Binding="{Binding Password}"/>
+                <DataGridTemplateColumn Header="Password">
+                    <DataGridTemplateColumn.HeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTemplateColumn.HeaderStyle>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <PasswordBox />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Komentarz" Binding="{Binding Comment}"/>
             </DataGrid.Columns>
         </DataGrid>

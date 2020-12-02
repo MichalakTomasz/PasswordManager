@@ -1,15 +1,16 @@
 ﻿using PasswordManager.EntityModels;
 using PasswordManager.Models;
 using PasswordManager.Services;
+using PasswordManager.Validation;
 using Prism.Commands;
-using Prism.Mvvm;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace PasswordManager.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : ValidatableBase
     {
         private readonly IGeneratorService _generatorService;
         private readonly IDataService _dataService;
@@ -50,6 +51,7 @@ namespace PasswordManager.ViewModels
         }
 
         private string _login;
+        [RegularExpression(Literals.RegexLettersDigits)]
         public string Login
         {
             get { return _login; }
@@ -57,6 +59,7 @@ namespace PasswordManager.ViewModels
         }
 
         private string _comment;
+        [RegularExpression(Literals.RegexLettersDigits)]
         public string Comment
         {
             get { return _comment; }
@@ -64,13 +67,15 @@ namespace PasswordManager.ViewModels
         }
 
         private string _keyName;
+        [RegularExpression(Literals.RegexLettersDigits)]
         public string KeyName
         {
             get { return _keyName; }
             set { SetProperty(ref _keyName, value); }
         }
 
-        private int _KeyLength = 10;
+        private int _KeyLength;
+        [RegularExpression(Literals.RegexDigits)]
         public int KeyLength
         {
             get { return _KeyLength; }
@@ -197,6 +202,7 @@ namespace PasswordManager.ViewModels
             SetTitle();
             
             Passwords = new ObservableCollection<PasswordModel>(_dataService.GetPasswords());
+            KeyLength = 10;
         }
 
         private DelegateCommand<RoutedEventArgs> _passwordChangedCommand;
