@@ -117,6 +117,13 @@ namespace PasswordManager.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
+        private PasswordModel _selectedRow;
+        public PasswordModel SelectedRow
+        {
+            get { return _selectedRow; }
+            set { SetProperty(ref _selectedRow, value); }
+        }
+
         private KeyTypes KeyType
         {
             get
@@ -215,5 +222,12 @@ namespace PasswordManager.ViewModels
             
             KeyValue = passwordBox.Password;
         }
+
+        private DelegateCommand _passwordVisibilityChangingCommand;
+        public DelegateCommand PasswordVisibilityChangingCommand =>
+            _passwordVisibilityChangingCommand ?? (_passwordVisibilityChangingCommand = new DelegateCommand(ExecutePasswordVisibilityChangingCommand));
+
+        void ExecutePasswordVisibilityChangingCommand()
+            => SelectedRow.IsVisiblePassword = !SelectedRow.IsVisiblePassword;
     }
 }

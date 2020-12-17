@@ -21,7 +21,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Generator" Height="190" Margin="5">
+        <GroupBox Grid.Row="0" Header="Generator" Height="196" Margin="5">
             <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -62,24 +62,32 @@
             Grid.Row="1"
             ItemsSource="{Binding Passwords}" 
             AutoGenerateColumns="False"
-            CanUserAddRows="False">
+            CanUserAddRows="False"
+            SelectedItem="{Binding SelectedRow}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nazwa" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Login" Binding="{Binding Username}"/>
-                <DataGridTextColumn Header="Hasło" Binding="{Binding Password}"/>
                 <DataGridTemplateColumn Header="Password">
                     <DataGridTemplateColumn.HeaderStyle>
                         <Style TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalAlignment" Value="Stretch"/>
                         </Style>
                     </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <PasswordBox />
+                            <pb:CustomPasswordBox x:Name="pass" IsVisiblePassword="{Binding IsVisiblePassword}" Password="{Binding Password}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Komentarz" Binding="{Binding Comment}"/>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}" Content="Show" Command="{Binding PasswordVisibilityChangingCommand}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

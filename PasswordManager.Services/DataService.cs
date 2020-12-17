@@ -102,7 +102,7 @@ namespace PasswordManager.Services
                 {
                     Id = passwordSet.Id,
                     Name = passwordSet.Name,
-                    Usermane = passwordSet.Username,
+                    Username = passwordSet.Username,
                     Password = password,
                     Comment = passwordSet.Comment
                 };

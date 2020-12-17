@@ -51,8 +51,14 @@ namespace CustomPasswordBox
 
         public static readonly DependencyProperty PasswordProperty =
             DependencyProperty.Register("Password", typeof(string), typeof(CustomPasswordBox), 
-                new PropertyMetadata(null));
+                new PropertyMetadata(null, OnPasswordChanged));
 
-
+        private static void OnPasswordChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var customPasswordBox = d as CustomPasswordBox;
+            var value = e.NewValue.ToString();
+            customPasswordBox.passwordBox.Password = value;
+            customPasswordBox.textBox.Text = value;
+        }
     }
 }
