@@ -1,5 +1,4 @@
-﻿using PasswordManager.LoginContent.Views;
-using PasswordManager.Models;
+﻿using PasswordManager.Models;
 using PasswordManager.Services;
 using PasswordManager.Views;
 using Prism.Commands;

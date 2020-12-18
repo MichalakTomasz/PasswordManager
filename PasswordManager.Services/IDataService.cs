@@ -7,7 +7,8 @@ namespace PasswordManager.Services
     public interface IDataService
     {
         IEnumerable<PasswordWrapper> GetPasswords();
-        void SavePassword(PasswordSet passwordSet);
+        void AddPassword(PasswordWrapper passwordWrapper, User user);
+        void DeletePassword(int id);
         void AddUser(User user);
         void UpdateUser(User user);
         User GetUser(string username);

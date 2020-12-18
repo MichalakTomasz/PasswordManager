@@ -30,22 +30,27 @@ namespace PasswordManager.Services
 
         private void CreateDatabaseIfNeeded()
         {
-            var context = _dbContextService.GetContext();
+            using var context = _dbContextService.GetContext();
             context.Database.Migrate();
         }
 
-        public void SavePassword(PasswordSet passwordSet)
+        public void AddPassword(PasswordWrapper passwordWrapper, User user)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(passwordSet?.Username) ||
-                    string.IsNullOrWhiteSpace(passwordSet.Name) ||
-                    passwordSet.User == null ||
-                    passwordSet.EncryptedPassword?.Count() == 0)
-                    throw new ArgumentNullException();
-
+                var passwordBuffer = _dataBinarySerializeService.Serialize<string>(passwordWrapper.Password);
+                var encryptedPassword = _aesCryptographicService.Encrypt(passwordBuffer);
+                
+                var password = new PasswordSet
+                {
+                    User = user,
+                    Username = passwordWrapper.Username,
+                    Name = passwordWrapper.Name,
+                    Comment = passwordWrapper.Comment,
+                    EncryptedPassword = encryptedPassword
+                };
                 using var context = _dbContextService.GetContext();
-                context.Attach(passwordSet);
+                context.Attach(password);
                 context.SaveChanges();
             }
             catch (Exception e)
@@ -53,6 +58,27 @@ namespace PasswordManager.Services
                 _logService.LogError(e);
                 if (_appStateService.IsInDebugMode)
                     throw;
+            }
+        }
+
+        public void DeletePassword(int id)
+        {
+            try
+            {
+                using var context = _dbContextService.GetContext();
+                var password = context.Passwords.FirstOrDefault(f => f.Id == id);
+                if (password != null)
+                {
+                    context.Remove(password);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                if (_appStateService.IsInDebugMode)
+                    throw;
+                throw;
             }
         }
 

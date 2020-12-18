@@ -1,5 +1,4 @@
-﻿using PasswordManager.EntityModels;
-using PasswordManager.Models;
+﻿using PasswordManager.Models;
 using PasswordManager.Services;
 using PasswordManager.Validation;
 using Prism.Commands;
@@ -16,19 +15,31 @@ namespace PasswordManager.ViewModels
         private readonly IDataService _dataService;
         private readonly ICopyService _copyService;
         private readonly IAccountService _accountService;
-        private readonly IAesCryptographicService _aesCryptographicService;
-        private readonly IDataBinarySerializeService _dataBinarySerializeService;
 
         public MainWindowViewModel(IGeneratorService generatorService, IDataService dataService, 
-            ICopyService copyService, IAccountService acconuntService, 
-            IAesCryptographicService aesCryptographicService, IDataBinarySerializeService dataBinarySerializeService)
+            ICopyService copyService, IAccountService acconuntService)
         {
             _generatorService = generatorService;
             _dataService = dataService;
             _copyService = copyService;
-            _accountService = acconuntService;
-            _aesCryptographicService = aesCryptographicService;
-            _dataBinarySerializeService = dataBinarySerializeService;
+            _accountService = acconuntService;            
+        }
+
+        private void Passwords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    var newItem = e.NewItems[0] as PasswordWrapper;
+                    if (newItem != null)
+                        _dataService.AddPassword(newItem, _accountService.LoggedUser);
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    var passwordWrapper = e.OldItems[0] as PasswordWrapper;
+                    if (passwordWrapper != null)
+                        _dataService.DeletePassword(passwordWrapper.Id);
+                    break;
+            }
         }
 
         private void SetTitle()
@@ -116,7 +127,14 @@ namespace PasswordManager.ViewModels
             get { return _title; }
             set { SetProperty(ref _title, value); }
         }
-                
+
+        private PasswordWrapper _selectedItem;
+        public PasswordWrapper SelectedItem
+        {
+            get { return _selectedItem; }
+            set { SetProperty(ref _selectedItem, value); }
+        }
+
         private KeyTypes KeyType
         {
             get
@@ -176,17 +194,14 @@ namespace PasswordManager.ViewModels
 
         void ExecuteSavePasswordCommand()
         {
-            var passwordByteBuffer = _dataBinarySerializeService.Serialize<string>(KeyValue);
-            var encryptedPassword = _aesCryptographicService.Encrypt(passwordByteBuffer);
-
-            var passwordSet = new PasswordSet
+            var password = new PasswordWrapper
             {
+                Username = _accountService.LoggedUser.Username,
                 Name = KeyName,
-                EncryptedPassword = encryptedPassword,
-                User = _accountService.LoggedUser,
-                Username = _accountService.LoggedUser.Username
+                Password = KeyValue,
+                Comment = Comment
             };
-            _dataService.SavePassword(passwordSet);
+            Passwords.Add(password);
         }
 
         bool CanExecutePasswordCommand()
@@ -202,6 +217,7 @@ namespace PasswordManager.ViewModels
             SetTitle();
             
             Passwords = new ObservableCollection<PasswordWrapper>(_dataService.GetPasswords());
+            Passwords.CollectionChanged += Passwords_CollectionChanged;
             KeyLength = 10;
         }
 
@@ -215,5 +231,11 @@ namespace PasswordManager.ViewModels
             
             KeyValue = passwordBox.Password;
         }
+        private DelegateCommand _deleteItemCommand;
+        public DelegateCommand DeleteItemCommand =>
+            _deleteItemCommand ?? (_deleteItemCommand = new DelegateCommand(ExecuteDeleteItemCommand));
+
+        void ExecuteDeleteItemCommand()
+            => _passwords.Remove(SelectedItem);
     }
 }

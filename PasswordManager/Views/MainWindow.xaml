@@ -65,7 +65,8 @@
             Grid.Row="1"
             ItemsSource="{Binding Passwords}" 
             AutoGenerateColumns="False"
-            CanUserAddRows="False">
+            CanUserAddRows="False"
+            SelectedItem="{Binding SelectedItem}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nazwa" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Login" Binding="{Binding Username}"/>
@@ -92,6 +93,11 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Usuń" Command="{Binding DeleteItemCommand}"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
         </DataGrid>
     </Grid>
 </Window>
