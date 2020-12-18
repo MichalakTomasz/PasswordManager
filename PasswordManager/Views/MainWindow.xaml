@@ -4,11 +4,15 @@
         xmlns:prism="http://prismlibrary.com/"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:pb="clr-namespace:CustomPasswordBox;assembly=CustomPasswordBox"
+        xmlns:a="clr-namespace:PasswordManager.AttachedProperties"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title}" Height="600" Width="800"
         MinWidth="500"
         MinHeight="200"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <a:FocusAttach x:Key="FocusAttach"/>
+    </Window.Resources>
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <prism:InvokeCommandAction Command="{Binding LoadedCommand}" TriggerParameterPath=""/>
@@ -34,7 +38,7 @@
                     <ColumnDefinition Width=".8*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                    <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding KeyValue, UpdateSourceTrigger=PropertyChanged}" a:FocusAttach.IsFocused="True" />
                     <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="Hasło"/>
                     <TextBox Grid.Row="0" Grid.Column="2" Width="30" Text="{Binding KeyLength, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Grid.Row="1" Grid.Column="2" Text="Długość" />
@@ -75,7 +79,7 @@
                     </DataGridTemplateColumn.HeaderStyle>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <pb:CustomPasswordBox x:Name="pass" IsVisiblePassword="{Binding IsVisiblePassword}" Password="{Binding Password}"/>
+                            <pb:CustomPasswordBox IsVisiblePassword="{Binding IsVisiblePassword}" Password="{Binding Password}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -83,7 +87,8 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}" Content="Show" Command="{Binding PasswordVisibilityChangingCommand}"/>
+                            <Button DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                    Content="Show" Command="{Binding PasswordVisibilityChangingCommand}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
