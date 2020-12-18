@@ -1,4 +1,5 @@
-﻿using PasswordManager.EntityModels;
+﻿using Microsoft.EntityFrameworkCore;
+using PasswordManager.EntityModels;
 using PasswordManager.Models;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,14 @@ namespace PasswordManager.Services
             _appStateService = appStateService;
             _aesCryptographicService = aesCryptographicService;
             _dataBinarySerializeService = dataBinarySerializeService;
+
+            CreateDatabaseIfNeeded();
+        }
+
+        private void CreateDatabaseIfNeeded()
+        {
+            var context = _dbContextService.GetContext();
+            context.Database.Migrate();
         }
 
         public void SavePassword(PasswordSet passwordSet)
@@ -89,16 +98,16 @@ namespace PasswordManager.Services
             }
         }
 
-        public IEnumerable<PasswordModel> GetPasswords()
+        public IEnumerable<PasswordWrapper> GetPasswords()
         {
             using var context = _dbContextService.GetContext();
             var passwords = context.Passwords.ToList();
-            var passwordModels = new List<PasswordModel>();
+            var passwordModels = new List<PasswordWrapper>();
             passwords.ForEach(passwordSet =>
             {
                 var encryptedPasswordBuffer = _aesCryptographicService.Decrypt(passwordSet.EncryptedPassword);
                 var password = _dataBinarySerializeService.Deserialize<string>(encryptedPasswordBuffer);
-                var passWordModel = new PasswordModel
+                var passWordModel = new PasswordWrapper
                 {
                     Id = passwordSet.Id,
                     Name = passwordSet.Name,

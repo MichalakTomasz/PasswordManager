@@ -6,7 +6,7 @@ namespace PasswordManager.Services
 {
     public interface IDataService
     {
-        IEnumerable<PasswordModel> GetPasswords();
+        IEnumerable<PasswordWrapper> GetPasswords();
         void SavePassword(PasswordSet passwordSet);
         void AddUser(User user);
         void UpdateUser(User user);

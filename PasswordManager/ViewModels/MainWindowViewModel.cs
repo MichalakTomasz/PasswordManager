@@ -36,8 +36,8 @@ namespace PasswordManager.ViewModels
             Title = $"{Literals.AppName} - {_accountService.LoggedUser.Username}";
         }
 
-        private ObservableCollection<PasswordModel> _passwords;
-        public ObservableCollection<PasswordModel> Passwords
+        private ObservableCollection<PasswordWrapper> _passwords;
+        public ObservableCollection<PasswordWrapper> Passwords
         {
             get { return _passwords; }
             set { SetProperty(ref _passwords, value); }
@@ -116,14 +116,7 @@ namespace PasswordManager.ViewModels
             get { return _title; }
             set { SetProperty(ref _title, value); }
         }
-
-        private PasswordModel _selectedRow;
-        public PasswordModel SelectedRow
-        {
-            get { return _selectedRow; }
-            set { SetProperty(ref _selectedRow, value); }
-        }
-
+                
         private KeyTypes KeyType
         {
             get
@@ -208,7 +201,7 @@ namespace PasswordManager.ViewModels
         {
             SetTitle();
             
-            Passwords = new ObservableCollection<PasswordModel>(_dataService.GetPasswords());
+            Passwords = new ObservableCollection<PasswordWrapper>(_dataService.GetPasswords());
             KeyLength = 10;
         }
 
@@ -222,12 +215,5 @@ namespace PasswordManager.ViewModels
             
             KeyValue = passwordBox.Password;
         }
-
-        private DelegateCommand _passwordVisibilityChangingCommand;
-        public DelegateCommand PasswordVisibilityChangingCommand =>
-            _passwordVisibilityChangingCommand ?? (_passwordVisibilityChangingCommand = new DelegateCommand(ExecutePasswordVisibilityChangingCommand));
-
-        void ExecutePasswordVisibilityChangingCommand()
-            => SelectedRow.IsVisiblePassword = !SelectedRow.IsVisiblePassword;
     }
 }

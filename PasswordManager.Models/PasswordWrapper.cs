@@ -1,8 +1,9 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
 
 namespace PasswordManager.Models
 {
-    public class PasswordModel : BindableBase
+    public class PasswordWrapper : BindableBase
     {
         private int _id;
         public int Id
@@ -40,5 +41,13 @@ namespace PasswordManager.Models
             get { return _isVisiblePassword; }
             set { SetProperty(ref _isVisiblePassword, value); }
         }
+        private DelegateCommand _passwordVisibilityChangingCommand;
+        public DelegateCommand PasswordVisibilityChangingCommand =>
+            _passwordVisibilityChangingCommand ?? (_passwordVisibilityChangingCommand = 
+            new DelegateCommand(ExecutePasswordVisibilityChangingCommand));
+
+        void ExecutePasswordVisibilityChangingCommand()
+            => IsVisiblePassword = !IsVisiblePassword;
+
     }
 }

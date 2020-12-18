@@ -50,12 +50,21 @@ namespace PasswordManager
 
         private DbContextOptions<PasswordDbContext> GetDbcontextOptions()
         {
-            var dbPath = @"D:\Repos\PasswordManager\PasswordDbSqlite.db";
+            string dbPath = GetDatabasePath();
             var connectionString = InjectPathToConnectionString(dbPath);
             var dbContextBuilder = new DbContextOptionsBuilder<PasswordDbContext>();
             dbContextBuilder.UseSqlite(connectionString);
             dbContextBuilder.EnableSensitiveDataLogging(true);
             return dbContextBuilder.Options;
+        }
+
+        private string GetDatabasePath()
+        {
+            var dbPath = @"D:\Repos\PasswordManager\PasswordDbSqlite.db"; ;
+            var appState = Container.Resolve<IAppStateService>();
+            if (appState.IsInProductionMode)
+                dbPath = "PasswordDb.db";
+            return dbPath;
         }
 
         private string InjectPathToConnectionString(string path)

@@ -65,8 +65,7 @@
             Grid.Row="1"
             ItemsSource="{Binding Passwords}" 
             AutoGenerateColumns="False"
-            CanUserAddRows="False"
-            SelectedItem="{Binding SelectedRow}">
+            CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nazwa" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Login" Binding="{Binding Username}"/>
@@ -87,8 +86,8 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}" 
-                                    Content="Show" Command="{Binding PasswordVisibilityChangingCommand}"/>
+                            <ToggleButton Content="Pokaż" IsChecked="{Binding IsVisiblePassword}" 
+                                          Command="{Binding PasswordVisibilityChangingCommand}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
