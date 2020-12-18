@@ -7,6 +7,7 @@ namespace PasswordManager.Services
 {
     public class GeneratorService : IGeneratorService
     {
+        private string _specialChars = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
         public string GenerateKey(int length, KeyTypes keyTypes)
         {
             var random = new Random();
@@ -31,19 +32,9 @@ namespace PasswordManager.Services
                             value = (char)(random.Next(26) + 97);
                             break;
                         case nameof(keyTypes.Chars):
-                            var charGroup = random.Next(3);
-                            switch (charGroup)
-                            {
-                                case 0:
-                                    value = (char)(random.Next(15) + 33);
-                                    break;
-                                case 1:
-                                    value = (char)(random.Next(7) + 58);
-                                    break;
-                                case 2:
-                                    value = (char)(random.Next(5) + 91);
-                                    break;
-                            }
+                            var count = _specialChars.Length;
+                            var charIndex = random.Next(_specialChars.Length);
+                            value = _specialChars[charIndex];
                             break;
                     }
                     tempPassword.Add(value);
