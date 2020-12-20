@@ -38,6 +38,9 @@ namespace PasswordManager.Services
         {
             try
             {
+                if (passwordWrapper == null || user == null)
+                    throw new ArgumentNullException();
+
                 var passwordBuffer = _dataBinarySerializeService.Serialize<string>(passwordWrapper.Password);
                 var encryptedPassword = _aesCryptographicService.Encrypt(passwordBuffer);
                 
@@ -60,7 +63,39 @@ namespace PasswordManager.Services
                     throw;
             }
         }
+        public void UpdatePassword(PasswordWrapper editedPasswordWrapper, User user)
+        {
+            try
+            {
+                if (editedPasswordWrapper == null || user == null)
+                    throw new ArgumentNullException();
 
+                using var context = _dbContextService.GetContext();
+                var toEdit = context.Passwords.FirstOrDefault(p => p.Id == editedPasswordWrapper.Id);
+                if (toEdit != null)
+                {
+                    var passwordBuffer = _dataBinarySerializeService.Serialize<string>(editedPasswordWrapper.Password);
+                    var encryptedPassword = _aesCryptographicService.Encrypt(passwordBuffer);
+                    var passwordSet = new PasswordSet
+                    {
+                        Id = editedPasswordWrapper.Id,
+                        Name = editedPasswordWrapper.Name,
+                        Username = editedPasswordWrapper.Username,
+                        EncryptedPassword = encryptedPassword,
+                        Comment = editedPasswordWrapper.Comment,
+                        User = user
+                    };
+                    context.Update(passwordSet);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                if (_appStateService.IsInDebugMode)
+                    throw;
+            }
+        }
         public void DeletePassword(int id)
         {
             try

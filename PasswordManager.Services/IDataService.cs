@@ -13,5 +13,6 @@ namespace PasswordManager.Services
         void UpdateUser(User user);
         User GetUser(string username);
         bool UserExist(string username);
+        void UpdatePassword(PasswordWrapper editedPasswordWrapper, User user);
     }
 }

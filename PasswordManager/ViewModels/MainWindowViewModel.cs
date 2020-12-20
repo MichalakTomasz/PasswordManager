@@ -1,9 +1,12 @@
-﻿using PasswordManager.Models;
+﻿using PasswordManager.BaseClasses;
+using PasswordManager.Models;
 using PasswordManager.Services;
-using PasswordManager.Validation;
 using Prism.Commands;
+using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -25,19 +28,19 @@ namespace PasswordManager.ViewModels
             _accountService = acconuntService;            
         }
 
-        private void Passwords_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Passwords_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     var newItem = e.NewItems[0] as PasswordWrapper;
                     if (newItem != null)
                         _dataService.AddPassword(newItem, _accountService.LoggedUser);
                     break;
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    var passwordWrapper = e.OldItems[0] as PasswordWrapper;
-                    if (passwordWrapper != null)
-                        _dataService.DeletePassword(passwordWrapper.Id);
+                case NotifyCollectionChangedAction.Remove:
+                    var removedPasswordWrapper = e.OldItems[0] as PasswordWrapper;
+                    if (removedPasswordWrapper != null)
+                        _dataService.DeletePassword(removedPasswordWrapper.Id);
                     break;
             }
         }
@@ -217,6 +220,7 @@ namespace PasswordManager.ViewModels
             SetTitle();
             
             Passwords = new ObservableCollection<PasswordWrapper>(_dataService.GetPasswords());
+            Passwords.ToList().ForEach(p => p.AcceptChanges());
             Passwords.CollectionChanged += Passwords_CollectionChanged;
             KeyLength = 10;
         }
@@ -237,5 +241,15 @@ namespace PasswordManager.ViewModels
 
         void ExecuteDeleteItemCommand()
             => _passwords.Remove(SelectedItem);
+
+        private DelegateCommand<EventArgs> _currentCellChangedCommand;
+        public DelegateCommand<EventArgs> CurrentCellChangedCommand =>
+            _currentCellChangedCommand ?? (_currentCellChangedCommand = new DelegateCommand<EventArgs>(ExecuteCurrentCellChangedCommand));
+
+        void ExecuteCurrentCellChangedCommand(EventArgs e)
+        {
+            if (SelectedItem != null && SelectedItem.IsValid && SelectedItem.IsChanged)
+                _dataService.UpdatePassword(SelectedItem, _accountService.LoggedUser);
+        }
     }
 }

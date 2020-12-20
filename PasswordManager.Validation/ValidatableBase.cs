@@ -7,9 +7,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-namespace PasswordManager.Validation
+namespace PasswordManager.BaseClasses
 {
-    public class ValidatableBase : BindableBase, INotifyDataErrorInfo
+    public abstract class ValidatableBase : BindableBase, INotifyDataErrorInfo
     {
         protected virtual void Validate<TProp>(TProp value, string propertyName)
         {
@@ -32,7 +32,7 @@ namespace PasswordManager.Validation
         }
 
         public bool HasErrors => _errorDictionary.Any();
-        protected bool IsValid => !HasErrors;
+        public bool IsValid => !HasErrors;
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 

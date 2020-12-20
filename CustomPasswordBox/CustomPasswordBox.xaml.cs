@@ -23,8 +23,6 @@ namespace CustomPasswordBox
             InitializeComponent();
         }
 
-
-
         public bool IsVisiblePassword
         {
             get { return (bool)GetValue(IsVisiblePasswordProperty); }

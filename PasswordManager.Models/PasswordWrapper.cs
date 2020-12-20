@@ -1,9 +1,11 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
+﻿using PasswordManager.BaseClasses;
+using Prism.Commands;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace PasswordManager.Models
 {
-    public class PasswordWrapper : BindableBase
+    public class PasswordWrapper : WrapperBase
     {
         private int _id;
         public int Id
@@ -17,7 +19,11 @@ namespace PasswordManager.Models
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
+        public bool IsChangedName => GetIsChanged(nameof(Name));
+        public string OriginalValueName => GetOriginalValue<string>(nameof(Name));
+
         private string _username;
+        [RegularExpression(Literals.RegexLettersDigits)]
         public string Username
         {
             get { return _username; }
@@ -29,25 +35,30 @@ namespace PasswordManager.Models
             get { return _password; }
             set { SetProperty(ref _password, value); }
         }
+        public bool IsChangedPassword => GetIsChanged(nameof(Password));
+        public string OriginalValuePassword => GetOriginalValue<string>(nameof(Password));
         private string _comment;
         public string Comment
         {
             get { return _comment; }
             set { SetProperty(ref _comment, value); }
         }
+        public bool IsChangedComment => GetIsChanged(nameof(Comment));
+        public string OriginalValueComment => GetOriginalValue<string>(Comment);
+
         private bool _isVisiblePassword;
         public bool IsVisiblePassword
         {
             get { return _isVisiblePassword; }
             set { SetProperty(ref _isVisiblePassword, value); }
         }
+
         private DelegateCommand _passwordVisibilityChangingCommand;
         public DelegateCommand PasswordVisibilityChangingCommand =>
-            _passwordVisibilityChangingCommand ?? (_passwordVisibilityChangingCommand = 
+            _passwordVisibilityChangingCommand ?? (_passwordVisibilityChangingCommand =
             new DelegateCommand(ExecutePasswordVisibilityChangingCommand));
 
         void ExecutePasswordVisibilityChangingCommand()
             => IsVisiblePassword = !IsVisiblePassword;
-
     }
 }
