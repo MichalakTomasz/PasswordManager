@@ -91,7 +91,7 @@ namespace PasswordManager.ViewModels
                 SecondPasswordQuestion = SecondPasswordQuestion
             };
             if (!_accountService.Register(registerData))
-                ErrorMessage = Literals.AccountExist;
+                ErrorMessage = Literals.MessageAccountExist;
             else
                 RequestClose.Invoke(null);
         }

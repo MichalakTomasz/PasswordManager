@@ -179,12 +179,12 @@ namespace PasswordManager.Services
                     }
                     else
                     {
-                        return new OperationResult(ResultType.Faild, Literals.WrongPassword);
+                        return new OperationResult(ResultType.Faild, Literals.MessageWrongPassword);
                     }
 
                     return new OperationResult(ResultType.Success);
                 }
-                return new OperationResult(ResultType.Faild, Literals.AccountNotExist);
+                return new OperationResult(ResultType.Faild, Literals.MessageAccountNotExist);
             }
             catch (Exception e)
             {

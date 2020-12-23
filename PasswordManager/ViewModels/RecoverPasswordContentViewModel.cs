@@ -92,7 +92,7 @@ namespace PasswordManager.ViewModels
             }
             else
             {
-                ErrorMessage = Literals.AccountNotExist;
+                ErrorMessage = Literals.MessageAccountNotExist;
             }
         }
 
@@ -115,7 +115,7 @@ namespace PasswordManager.ViewModels
             }
             else
             {
-                ErrorMessage = Literals.WrongPassword;
+                ErrorMessage = Literals.MessageWrongPassword;
             }
         }
 

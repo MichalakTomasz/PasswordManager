@@ -1,7 +1,10 @@
 ﻿using PasswordManager.BaseClasses;
+using PasswordManager.EditPasswordContent.Views;
+using PasswordManager.MessageDialogContent.Views;
 using PasswordManager.Models;
 using PasswordManager.Services;
 using Prism.Commands;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -18,14 +21,18 @@ namespace PasswordManager.ViewModels
         private readonly IDataService _dataService;
         private readonly ICopyService _copyService;
         private readonly IAccountService _accountService;
+        private readonly IDialogService _dialogService;
+
+        private const string _constPasswordWrapper = "PasswodWrapper";
 
         public MainWindowViewModel(IGeneratorService generatorService, IDataService dataService, 
-            ICopyService copyService, IAccountService acconuntService)
+            ICopyService copyService, IAccountService acconuntService, IDialogService dialogService)
         {
             _generatorService = generatorService;
             _dataService = dataService;
             _copyService = copyService;
-            _accountService = acconuntService;            
+            _accountService = acconuntService;
+            _dialogService = dialogService;
         }
 
         private void Passwords_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -240,7 +247,16 @@ namespace PasswordManager.ViewModels
             _deleteItemCommand ?? (_deleteItemCommand = new DelegateCommand(ExecuteDeleteItemCommand));
 
         void ExecuteDeleteItemCommand()
-            => _passwords.Remove(SelectedItem);
+        {
+            var dialogParams = new DialogParameters
+            {
+                { "Message", Literals.MessageDeleteQuestion },
+                { "Title", Literals.Warning }
+            };
+
+            _dialogService.ShowDialog(nameof(MessageDialog), dialogParams, DeleteDialogCallcack);
+            
+        }            
 
         private DelegateCommand<EventArgs> _currentCellChangedCommand;
         public DelegateCommand<EventArgs> CurrentCellChangedCommand =>
@@ -249,7 +265,32 @@ namespace PasswordManager.ViewModels
         void ExecuteCurrentCellChangedCommand(EventArgs e)
         {
             if (SelectedItem != null && SelectedItem.IsValid && SelectedItem.IsChanged)
+            {
                 _dataService.UpdatePassword(SelectedItem, _accountService.LoggedUser);
+            }
+        }
+
+        private void DeleteDialogCallcack(IDialogResult dialogResult)
+        {
+            if (dialogResult.Result == ButtonResult.Yes)
+                _passwords.Remove(SelectedItem);
+        }
+
+        private DelegateCommand _editItemCommand;
+        public DelegateCommand EditItemCommand =>
+            _editItemCommand ?? (_editItemCommand = new DelegateCommand(ExecuteEditItemCommand));
+
+        void ExecuteEditItemCommand()
+        {
+            var parameters = new DialogParameters
+            {
+                {nameof(PasswordWrapper), SelectedItem}
+        };
+            _dialogService.ShowDialog(nameof(EditPassword), parameters, EditDaialogCallback);
+        }
+
+        private void EditDaialogCallback(IDialogResult dialogResult)
+        {        
         }
     }
 }

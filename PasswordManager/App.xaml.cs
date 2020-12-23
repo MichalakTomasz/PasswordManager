@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PasswordManager.Context;
+using PasswordManager.EditPasswordContent;
+using PasswordManager.MessageDialogContent;
 using PasswordManager.Services;
 using PasswordManager.ViewModels;
 using PasswordManager.Views;
 using Prism.Ioc;
+using Prism.Modularity;
 using Prism.Services.Dialogs;
 using System.Configuration;
 using System.Windows;
@@ -34,10 +37,16 @@ namespace PasswordManager
             containerRegistry.RegisterInstance<DbContextService>(new DbContextService(dbContextOptions));
             containerRegistry.Register<IGenericCryptographicService, GenericCryptographicService>();
 
-            containerRegistry.RegisterDialog<Views.LoginContent, LoginContentViewModel>();
-            containerRegistry.RegisterDialog<Views.RegisterContent, RegisterContentViewModel>();
-            containerRegistry.RegisterDialog<Views.RecoverPasswordContent>();
-            containerRegistry.RegisterDialog<Views.ChangePasswordContent>();
+            containerRegistry.RegisterDialog<LoginContent, LoginContentViewModel>();
+            containerRegistry.RegisterDialog<RegisterContent, RegisterContentViewModel>();
+            containerRegistry.RegisterDialog<RecoverPasswordContent>();
+
+        }
+
+        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+        {
+            moduleCatalog.AddModule<EditPasswordContentModule>();
+            moduleCatalog.AddModule<MessageDialogContentModule>();
         }
 
         private DbContextOptions<PasswordDbContext> GetDbcontextOptions()

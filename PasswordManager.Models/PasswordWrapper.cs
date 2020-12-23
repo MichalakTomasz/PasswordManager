@@ -44,7 +44,7 @@ namespace PasswordManager.Models
             set { SetProperty(ref _comment, value); }
         }
         public bool IsChangedComment => GetIsChanged(nameof(Comment));
-        public string OriginalValueComment => GetOriginalValue<string>(Comment);
+        public string OriginalValueComment => GetOriginalValue<string>(nameof(Comment));
 
         private bool _isVisiblePassword;
         public bool IsVisiblePassword

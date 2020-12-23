@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="PasswordManager.MessageDialogContent.Views.MessageDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:PasswordManager.MessageDialogContent.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
+            <Setter Property="ResizeMode" Value="NoResize"/>
+            <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+        </Style>
+    </prism:Dialog.WindowStyle>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock 
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            Text="{Binding Message}"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Margin="10 20 10 20"/>
+        <Button 
+            Grid.Row="1"
+            Grid.Column="0"
+            Content="Ok"
+            Command="{Binding YesCommand}"
+            Height="30"
+            Margin="40 0 10 0"/>
+        <Button 
+            Grid.Row="1" 
+            Grid.Column="1"
+            Content="Anuluj"
+            Height="30"
+            Margin="10 2 40 0"
+            Command="{Binding NoCommand}"/>
+    </Grid>
+</UserControl>

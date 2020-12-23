@@ -106,7 +106,7 @@ namespace PasswordManager.ViewModels
             var result = _accountService.ChangePassword(changePasswordModel);
             if (result.ResultType == ResultType.Success)
             {
-                MessageBox.Show(Literals.PasswordChanged, Literals.Information,
+                MessageBox.Show(Literals.MessagePasswordChanged, Literals.Information,
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 RequestClose.Invoke(null);
             }
