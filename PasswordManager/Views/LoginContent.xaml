@@ -6,11 +6,11 @@
              xmlns:local="clr-namespace:PasswordManager.Views"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:a="clr-namespace:PasswordManager.AttachedProperties"
+             xmlns:c="clr-namespace:PasswordManager.Commons;assembly=PasswordManager.Commons"
              prism:ViewModelLocator.AutoWireViewModel="True"             
              mc:Ignorable="d">
     <UserControl.Resources>
-        <a:FocusAttach x:Key="FocusAttach"/>
+        <c:FocusAttach x:Key="FocusAttach"/>
     </UserControl.Resources>
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
@@ -39,7 +39,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Logowanie" Style="{StaticResource Title}"/>
-        <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" a:FocusAttach.IsFocused="True"/>
+        <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" c:FocusAttach.IsFocused="True"/>
         <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Login" />
         <PasswordBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
             <b:Interaction.Triggers>

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace PasswordManager.AttachedProperties
+namespace PasswordManager.Commons
 {
     public class FocusAttach
     {
@@ -23,7 +23,8 @@ namespace PasswordManager.AttachedProperties
         {
             var uiElement = d as UIElement;
             if (uiElement != null)
-                if ((bool)e.NewValue)  uiElement.Focus();
+                if ((bool)e.NewValue) uiElement.Focus();
+
         }
     }
 }

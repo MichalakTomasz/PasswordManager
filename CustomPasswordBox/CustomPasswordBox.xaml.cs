@@ -1,26 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CustomPasswordBox
 {
-    /// <summary>
-    /// Interaction logic for CustomPasswordBox.xaml
-    /// </summary>
     public partial class CustomPasswordBox : UserControl
     {
         public CustomPasswordBox()
         {
             InitializeComponent();
+            textBox.TextChanged += TextBox_TextChanged;
+            passwordBox.PasswordChanged += PasswordBox_PasswordChanged;
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            var passwordBox = e.OriginalSource as PasswordBox;
+            if (passwordBox != null)
+                Password = passwordBox.Password;
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = e.OriginalSource as TextBox;
+            if (textBox != null)
+                Password = textBox.Text;
         }
 
         public bool IsVisiblePassword
