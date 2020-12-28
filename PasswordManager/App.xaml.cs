@@ -37,8 +37,9 @@ namespace PasswordManager
             containerRegistry.RegisterInstance<DbContextService>(new DbContextService(dbContextOptions));
             containerRegistry.Register<IGenericCryptographicService, GenericCryptographicService>();
 
-            containerRegistry.RegisterDialog<LoginContent, LoginContentViewModel>();
-            containerRegistry.RegisterDialog<RegisterContent, RegisterContentViewModel>();
+            containerRegistry.RegisterDialog<LoginContent>();
+            containerRegistry.RegisterDialog<ChangePasswordContent>();
+            containerRegistry.RegisterDialog<RegisterContent>();
             containerRegistry.RegisterDialog<RecoverPasswordContent>();
 
         }

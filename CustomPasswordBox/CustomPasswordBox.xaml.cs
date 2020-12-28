@@ -15,14 +15,14 @@ namespace CustomPasswordBox
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             var passwordBox = e.OriginalSource as PasswordBox;
-            if (passwordBox != null)
+            if (passwordBox != null && !Equals(Password, passwordBox.Password))
                 Password = passwordBox.Password;
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             var textBox = e.OriginalSource as TextBox;
-            if (textBox != null)
+            if (textBox != null && !Equals(Password, textBox.Text))
                 Password = textBox.Text;
         }
 
@@ -57,9 +57,16 @@ namespace CustomPasswordBox
         private static void OnPasswordChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var customPasswordBox = d as CustomPasswordBox;
-            var value = e.NewValue.ToString();
-            customPasswordBox.passwordBox.Password = value;
-            customPasswordBox.textBox.Text = value;
+            var value = e.NewValue?.ToString();
+            var oldValue = e.OldValue?.ToString();
+            if (!Equals(value, oldValue))
+            {
+                if (!Equals(customPasswordBox.passwordBox.Password, e.NewValue)) 
+                    customPasswordBox.passwordBox.Password = value;
+
+                if (!Equals(customPasswordBox.textBox.Text, e.NewValue)) 
+                    customPasswordBox.textBox.Text = value;
+            }
         }
     }
 }

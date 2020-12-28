@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:PasswordManager.Views"
              xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:commons="clr-namespace:PasswordManager.Commons;assembly=PasswordManager.Commons"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -20,6 +21,7 @@
         </Style>
     </prism:Dialog.WindowStyle>
     <UserControl.Resources>
+        <commons:FocusAttach x:Key="FocusAttach"/>
         <Style TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -45,7 +47,11 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Rejestracja" Style="{StaticResource Title}"/>
-        <TextBox Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox 
+            Grid.Row="1" 
+            Grid.ColumnSpan="2" 
+            Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}" 
+            commons:FocusAttach.IsFocused="True"/>
         <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="Login"/>
         <PasswordBox Grid.Row="3" Grid.ColumnSpan="2">
             <b:Interaction.Triggers>
