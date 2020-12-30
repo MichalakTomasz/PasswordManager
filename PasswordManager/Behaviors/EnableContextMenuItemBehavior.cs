@@ -7,8 +7,6 @@ namespace PasswordManager.Behaviors
 {
     public class EnableContextMenuItemBehavior : Behavior<MenuItem>
     {
-
-
         public PasswordWrapper SelectedItem
         {
             get { return (PasswordWrapper)GetValue(SelectedItemProperty); }
@@ -24,12 +22,9 @@ namespace PasswordManager.Behaviors
             var contextMenu = AssociatedObject.Parent as ContextMenu;
             if (contextMenu != null)
             contextMenu.Opened += ContextMenuOpened;
-
         }
 
         private void ContextMenuOpened(object sender, RoutedEventArgs e)
-        {
-            AssociatedObject.IsEnabled = SelectedItem != null;
-        }
+            => AssociatedObject.IsEnabled = SelectedItem != null;
     }
 }
