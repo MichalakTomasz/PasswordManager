@@ -72,7 +72,7 @@ namespace PasswordManager.ViewModels
         }
 
         private string _login;
-        [RegularExpression(Literals.RegexLettersDigits)]
+        [RegularExpression(Literals.RegexLettersDigitsSpaceSpecials)]
         public string Login
         {
             get { return _login; }
@@ -80,7 +80,7 @@ namespace PasswordManager.ViewModels
         }
 
         private string _comment;
-        [RegularExpression(Literals.RegexLettersDigits)]
+        [RegularExpression(Literals.RegexLettersDigitsSpaceSpecials)]
         public string Comment
         {
             get { return _comment; }
@@ -88,7 +88,7 @@ namespace PasswordManager.ViewModels
         }
 
         private string _keyName;
-        [RegularExpression(Literals.RegexLettersDigits)]
+        [RegularExpression(Literals.RegexLettersDigitsSpaceSpecials)]
         public string KeyName
         {
             get { return _keyName; }

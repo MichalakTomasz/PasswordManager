@@ -6,6 +6,8 @@
         public const string Password = "Password";
         public const string AppName = "Password Manager";
         public const string RegexLettersDigits = "[a-zA-Z0-9]{1,20}";
+        public const string RegexLettersDigitsSpace = "[a-zA-Z0-9 ]{1,20}";
+        public const string RegexLettersDigitsSpaceSpecials = "[a-zA-Z0-9 !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~]{1,20}";
         public const string RegexDigits = "[0-9]{1,2}";
 
         #region Messages
