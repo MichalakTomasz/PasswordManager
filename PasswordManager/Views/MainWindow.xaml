@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:behaviors="clr-namespace:PasswordManager.Behaviors"
         xmlns:pb="clr-namespace:CustomPasswordBox;assembly=CustomPasswordBox"
         xmlns:c="clr-namespace:PasswordManager.Commons;assembly=PasswordManager.Commons"
         prism:ViewModelLocator.AutoWireViewModel="True"
@@ -12,6 +13,7 @@
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <c:FocusAttach x:Key="FocusAttach"/>
+        <behaviors:EnableContextMenuItemBehavior x:Key="EnableContextMenuItemBehavior"/>
     </Window.Resources>
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
@@ -63,6 +65,7 @@
         </GroupBox>
         <DataGrid 
             Grid.Row="1"
+            x:Name="MainGrid"
             ItemsSource="{Binding Passwords}" 
             AutoGenerateColumns="False"
             CanUserAddRows="False"
@@ -96,8 +99,16 @@
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Edytuj" Command="{Binding EditItemCommand}"/>
-                    <MenuItem Header="Usuń" Command="{Binding DeleteItemCommand}"/>
+                    <MenuItem Header="Edytuj" Command="{Binding EditItemCommand}">
+                        <b:Interaction.Behaviors>
+                            <behaviors:EnableContextMenuItemBehavior SelectedItem="{Binding SelectedItem}"/>
+                        </b:Interaction.Behaviors>
+                    </MenuItem>
+                    <MenuItem Header="Usuń" Command="{Binding DeleteItemCommand}">
+                        <b:Interaction.Behaviors>
+                            <behaviors:EnableContextMenuItemBehavior SelectedItem="{Binding SelectedItem}"/>
+                        </b:Interaction.Behaviors>
+                    </MenuItem>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
